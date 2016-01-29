@@ -1,0 +1,16 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Ryan Pastorelle -- Developer -- @rpastorelle
+    Shayna Bane -- Content Engineer -- @shaynabane
+
+# THANKS
+
+    Everyone
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    jQuery, Modernizr, React
