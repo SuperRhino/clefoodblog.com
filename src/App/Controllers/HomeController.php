@@ -2,13 +2,14 @@
 namespace App\Controllers;
 
 use Core\BaseController;
+use App\Models\Event;
 
 class HomeController extends BaseController
 {
     public function index()
     {
         $data = [
-            'events' => $this->getEventData(),
+            'events' => Event::findMostRecent(),
         ];
 
         return $this->view('home.html', $data);
@@ -21,21 +22,5 @@ class HomeController extends BaseController
     public function addPage()
     {
         return $this->view('add-page.html');
-    }
-
-    /**
-     * Get event data for homepage display
-     *
-     * @return array
-     */
-    private function getEventData()
-    {
-        $query = $this->app->query->newSelect();
-        $query->cols(['*'])
-              ->from('events')
-              ->orderBy(['event_date desc', 'post_date desc'])
-              ->limit(3);
-
-        return $this->app->db->fetchAll($query);
     }
 }
