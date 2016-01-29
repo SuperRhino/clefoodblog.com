@@ -22,7 +22,7 @@ $must_auth = function($request, $response, $next)
  * Public Pages Routes:
  */
 $this->get('/', 'App\Controllers\HomeController:index');
-$this->get('/add-event', 'App\Controllers\HomeController:addEvent');
+$this->get('/add-page', 'App\Controllers\HomeController:addPage');
 
 /**
  * API Routes:

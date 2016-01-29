@@ -39,9 +39,9 @@ export default class UserMenu extends React.Component {
           </a>
           <ul className="dropdown-menu">
             <li>
-              <a href="/add-event">
+              <a href="/add-page">
                 <span className="glyphicon glyphicon-plus-sign" aria-hidden="true" style={styles.icon}></span>
-                Add Event
+                Add Page
               </a>
             </li>
             <li><a href="#" onClick={this._onEditPress}>

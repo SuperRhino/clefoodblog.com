@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import path from 'path';
 import Utils from '../Utils/Utils';
-import AddEventForm from '../Components/AddEventForm';
+import AddPageForm from '../Components/AddPageForm';
 
 export default class Routes {
 
@@ -24,10 +24,10 @@ export default class Routes {
     console.log('Home route');
   }
 
-  static addEvent() {
+  static addPage() {
     ReactDOM.render(
-      <AddEventForm />,
-      document.getElementById('AddEventForm')
+      <AddPageForm />,
+      document.getElementById('AddPageForm')
     );
   }
 

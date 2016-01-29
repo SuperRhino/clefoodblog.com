@@ -18,9 +18,9 @@ class HomeController extends BaseController
      * ADMIN ROUTE
      * add an event
      */
-    public function addEvent()
+    public function addPage()
     {
-        return $this->view('add-event.html');
+        return $this->view('add-page.html');
     }
 
     /**
