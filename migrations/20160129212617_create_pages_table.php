@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class CreateDetailsTable extends AbstractMigration
+class CreatePagesTable extends AbstractMigration
 {
     public function change()
     {
