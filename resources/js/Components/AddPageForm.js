@@ -50,7 +50,7 @@ export default class AddPageForm extends React.Component {
             <div className="form-group">
               <textarea ref="eventDescription" className="form-control input-lg" rows="3" placeholder="Enter short description"></textarea>
             </div>
-            <button type="submit" className="btn btn-info">
+            <button type="submit" className="btn btn-lg btn-info" style={styles.button}>
               <span className="glyphicon glyphicon-ok-sign"></span>
               {' Add Event'}
             </button>
@@ -66,7 +66,7 @@ export default class AddPageForm extends React.Component {
             <div className="form-group">
               <textarea ref="pageDescription" className="form-control input-lg" rows="5" placeholder={placeholderCopy}></textarea>
             </div>
-            <button type="submit" className="btn btn-success">
+            <button type="submit" className="btn btn-lg btn-success" style={styles.button}>
               <span className="glyphicon glyphicon-plus-sign"></span>
               {' Add Event + Page'}
             </button>
@@ -109,3 +109,10 @@ export default class AddPageForm extends React.Component {
     this.setState({authorized: !! user.id});
   }
 }
+
+
+var styles = {
+  button: {
+    width: '100%',
+  },
+};
