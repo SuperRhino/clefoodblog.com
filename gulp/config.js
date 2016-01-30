@@ -7,5 +7,6 @@ module.exports = {
   commonCss: [
     "./bower_components/bootstrap/dist/css/bootstrap.css",
     "./bower_components/bootstrap/dist/css/bootstrap-theme.css",
+    "./node_modules/react-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css",
   ],
 };

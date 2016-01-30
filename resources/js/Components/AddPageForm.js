@@ -1,4 +1,6 @@
 import React from 'react';
+import moment from 'moment';
+import DateTimeInput from 'react-bootstrap-datetimepicker';
 import CurrentUser from '../Stores/CurrentUser';
 
 export default class AddPageForm extends React.Component {
@@ -8,6 +10,8 @@ export default class AddPageForm extends React.Component {
   constructor(props) {
     super(props);
 
+    this.eventTimestamp = null;
+
     this.state = {
       authorized: true,
       user: this.props.user,
@@ -15,6 +19,7 @@ export default class AddPageForm extends React.Component {
 
     this._onSubmitEvent = this._onSubmitEvent.bind(this);
     this._onSubmitPage = this._onSubmitPage.bind(this);
+    this._onEventDateChange = this._onEventDateChange.bind(this);
     this._onUserChange = this._onUserChange.bind(this);
   }
 
@@ -35,9 +40,12 @@ export default class AddPageForm extends React.Component {
   render() {
     if (! this.state.authorized) return <h4>Must be logged in :(</h4>;
 
+    let dateInputProps = {placeholder: "Event Date/Time"},
+        placeholderCopy = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi iaculis est lectus, posuere scelerisque massa rhoncus in. Vestibulum facilisis purus non velit porttitor, non imperdiet erat condimentum.";
+
+
     // add .has-success or .has-error
     // .glyphicon-ok or .glyphicon-remove
-    let placeholderCopy = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi iaculis est lectus, posuere scelerisque massa rhoncus in. Vestibulum facilisis purus non velit porttitor, non imperdiet erat condimentum.";
     return (
       <div className="row">
         <div className="col-xs-4">
@@ -49,6 +57,18 @@ export default class AddPageForm extends React.Component {
             </div>
             <div className="form-group">
               <textarea ref="eventDescription" className="form-control input-lg" rows="3" placeholder="Enter short description"></textarea>
+            </div>
+            <div className="form-group">
+              <input ref="eventDetails" className="form-control input-lg" type="text" placeholder="http://event.com/details" />
+            </div>
+            <div className="form-group">
+              <DateTimeInput
+                size={'lg'}
+                defaultText={''}
+                inputProps={dateInputProps}
+                format={'x'}
+                inputFormat={'YYYY-MM-DD hh:mm A'}
+                onChange={this._onEventDateChange} />
             </div>
             <button type="submit" className="btn btn-lg btn-info" style={styles.button}>
               <span className="glyphicon glyphicon-ok-sign"></span>
@@ -76,10 +96,20 @@ export default class AddPageForm extends React.Component {
     );
   }
 
+  _onEventDateChange(datetime) {
+    this.eventTimestamp = datetime;
+  }
+
+  _getEventDateFormat() {
+    return moment.unix(this.eventTimestamp / 1000).format("YYYY-MM-DD HH:mm:00");
+  }
+
   _getEventData() {
     return {
       title: this.refs.eventTitle.value,
       description: this.refs.eventDescription.value,
+      details_uri: this.refs.eventDetails.value,
+      event_date: this.eventTimestamp ? this._getEventDateFormat() : null,
     };
   }
 
