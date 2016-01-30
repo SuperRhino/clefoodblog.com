@@ -2,14 +2,14 @@
 namespace App\Controllers;
 
 use Core\BaseController;
-use App\Models\Event;
+use App\Models\Page;
 
 class HomeController extends BaseController
 {
     public function index()
     {
         $data = [
-            'events' => Event::findMostRecent(),
+            'pages' => Page::findMostRecent(),
         ];
 
         return $this->view('home.html', $data);
