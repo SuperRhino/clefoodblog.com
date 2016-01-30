@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import DateTimeInput from 'react-bootstrap-datetimepicker';
+import ApiRequest from '../Api/ApiRequest';
 import CurrentUser from '../Stores/CurrentUser';
 
 export default class AddPageForm extends React.Component {
@@ -137,6 +138,11 @@ export default class AddPageForm extends React.Component {
     e.preventDefault();
     var data = this._getPageData();
     console.log('_onSubmitPage', data);
+
+    ApiRequest.post('/page')
+      .data(data)
+      .send(page => console.log('page:', page));
+
   }
 
   _onUserChange(user) {

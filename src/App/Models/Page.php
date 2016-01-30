@@ -30,8 +30,33 @@ class Page extends Model {
         $this->meta_description = array_get($values, 'meta_description');
         $this->meta_keywords = array_get($values, 'meta_keywords');
         $this->author_id = (int) array_get($values, 'author_id');
-        $this->post_date = array_get($values, 'post_date');
+        $this->post_date = array_get($values, 'post_date', date('Y-m-d H:i:s'));
         $this->updated_date = array_get($values, 'updated_date');
+    }
+
+    public function save()
+    {
+        if (! $this->id) {
+            $this->id = $this->createPage();
+        }
+    }
+
+    protected function createPage()
+    {
+        $insert = 'INSERT INTO pages (title, uri, article, preview_image, category, meta_title, meta_description, meta_keywords, author_id, post_date)
+                    VALUES ("'.$this->title.'",
+                            "'.$this->uri.'",
+                            "'.$this->article.'",
+                            "'.$this->preview_image.'",
+                            "'.$this->category.'",
+                            "'.$this->meta_title.'",
+                            "'.$this->meta_description.'",
+                            "'.$this->meta_keywords.'",
+                            '.$this->author_id.',
+                            "'.$this->post_date.'")';
+        static::$app->db->query($insert);
+
+        return static::$app->db->lastInsertId();
     }
 
     public function toArray()
