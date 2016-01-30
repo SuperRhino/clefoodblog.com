@@ -31,12 +31,12 @@ class CreateEventsTable extends AbstractMigration
              ->addColumn('title', 'string', ['limit' => 20, 'null' => false])
              ->addColumn('description', 'string', ['null' => true])
              ->addColumn('details_uri', 'string', ['null' => true])
-             ->addColumn('post_date', 'datetime', ['null' => false])
              ->addColumn('event_date', 'datetime', ['null' => true])
+             ->addColumn('post_date', 'datetime', ['null' => false])
              ->addIndex('title')
              ->addIndex('details_uri')
-             ->addIndex('post_date')
              ->addIndex('event_date')
+             ->addIndex('post_date')
              ->create();
     }
 }

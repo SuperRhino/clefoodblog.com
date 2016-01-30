@@ -8,7 +8,7 @@ class CreatePagesTable extends AbstractMigration
     {
         $this->table('pages')
              ->addColumn('title', 'string', ['limit' => 20, 'null' => false])
-             ->addColumn('description', 'string', ['null' => true])
+             ->addColumn('description', 'text', ['null' => true])
              ->addColumn('event_id', 'integer', ['null' => true])
              ->addColumn('post_date', 'datetime', ['null' => false])
              ->addColumn('updated_date', 'datetime', ['null' => false])
