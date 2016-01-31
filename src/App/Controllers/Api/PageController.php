@@ -16,14 +16,6 @@ class PageController extends BaseApiController
             throw new NotFoundException('User not found');
         }
 
-        // $title = $this->json('title');
-        // $article = $this->json('article');
-        // $uri = $this->json('uri');
-        // $category = $this->json('category');
-        // $meta_title = $this->json('meta_title');
-        // $meta_description = $this->json('meta_description');
-        // $meta_keywords = $this->json('meta_keywords');
-        // $post_date = $this->json('post_date');
         $pageData = $this->json();
         $pageData['author_id'] = $user->id;
 

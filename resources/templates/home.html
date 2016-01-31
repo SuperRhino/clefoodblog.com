@@ -9,12 +9,14 @@
         <div class="row">
             {% for page in data.pages %}
             <div class="col-md-4">
-                <h2>{{ page.title }}</h2>
-                <p><em>{{ page.updated_date is empty ? page.post_date|date("M j, Y") : page.updated_date|date("M j, Y") }}</em></p>
-                <p>{{ page.meta_description }}</p>
-                {% if page.uri %}
-                <p><a class="btn btn-default" href="{{ page.uri }}" role="button">View details &raquo;</a></p>
-                {% endif %}
+              {% if page.uri %}
+              <h2><a href="{{ page.uri }}">{{ page.title }}</a></h2>
+              {% else %}
+              <h2>{{ page.title }}</h2>
+              {% endif %}
+
+              <p><em>{{ page.updated_date is empty ? page.post_date|date("M j, Y") : page.updated_date|date("M j, Y") }}</em></p>
+              <p>{{ page.meta_description }}</p>
             </div>
             {% endfor %}
         </div>

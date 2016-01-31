@@ -30,7 +30,7 @@ class Page extends Model {
         $this->meta_description = array_get($values, 'meta_description');
         $this->meta_keywords = array_get($values, 'meta_keywords');
         $this->author_id = (int) array_get($values, 'author_id');
-        $this->post_date = array_get($values, 'post_date', date('Y-m-d H:i:s'));
+        $this->post_date = array_get($values, 'post_date') ?: date('Y-m-d H:i:s');
         $this->updated_date = array_get($values, 'updated_date');
     }
 
@@ -81,7 +81,7 @@ class Page extends Model {
         $query = static::$app->query->newSelect();
         $query->cols(['*'])
               ->from('pages')
-              ->orderBy(['updated_date desc', 'post_date desc'])
+              ->orderBy(['if(updated_date, updated_date, post_date) desc'])
               ->limit($limit);
 
         $pages = [];
@@ -91,5 +91,21 @@ class Page extends Model {
         }
 
         return $pages;
+    }
+
+    public static function findByPageName($pageName)
+    {
+        $query = static::$app->query->newSelect();
+        $query->cols(['*'])
+              ->from('pages')
+              ->where('uri="'.$pageName.'"')
+              ->limit($limit);
+
+        $result = static::$app->db->fetchOne($query);
+        if (! $result) {
+            return null;
+        }
+
+        return new Page($result);
     }
 }

@@ -23,6 +23,7 @@ $must_auth = function($request, $response, $next)
  */
 $this->get('/', 'App\Controllers\HomeController:index');
 $this->get('/add-page', 'App\Controllers\HomeController:addPage');
+$this->get('/{pageName}', 'App\Controllers\HomeController:showPage');
 
 /**
  * API Routes:

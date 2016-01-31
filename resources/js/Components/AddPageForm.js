@@ -15,6 +15,7 @@ export default class AddPageForm extends React.Component {
 
     this.state = {
       authorized: true,
+      processing: false,
       user: this.props.user,
     };
 
@@ -37,6 +38,29 @@ export default class AddPageForm extends React.Component {
     this.stopUserSubscribe();
   }
 
+  renderProgressBar() {
+    return (
+      <div className="progress" style={{height: "auto"}}>
+        <div className="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={styles.progressBar}>
+          Saving...
+        </div>
+      </div>
+    );
+  }
+
+  renderSubmitButton() {
+    if (this.state.processing) {
+      return this.renderProgressBar();
+    }
+
+    return (
+      <button type="submit" className="btn btn-lg btn-info" style={styles.button}>
+        <span className="glyphicon glyphicon-plus-sign"></span>
+        {' Add Page'}
+      </button>
+    );
+  }
+
   render() {
     if (! this.state.authorized) return <h4>Must be logged in :(</h4>;
 
@@ -45,7 +69,7 @@ export default class AddPageForm extends React.Component {
     // add .has-success or .has-error
     // .glyphicon-ok or .glyphicon-remove
     return (
-      <form className="" role="form" onSubmit={this._onSubmitPage}>
+      <form id="addNewPage" className="" role="form" onSubmit={this._onSubmitPage}>
         <div className="row">
           <div className="col-xs-12">
             <h1>Add New Page</h1>
@@ -103,10 +127,7 @@ export default class AddPageForm extends React.Component {
             <div className="form-group">
               <textarea ref="pageArticle" className="form-control input-lg" rows="10" placeholder={placeholderCopy}></textarea>
             </div>
-            <button type="submit" className="btn btn-lg btn-info" style={styles.button}>
-              <span className="glyphicon glyphicon-plus-sign"></span>
-              {' Add Page'}
-            </button>
+            {this.renderSubmitButton()}
           </div>
         </div>
       </form>
@@ -136,13 +157,20 @@ export default class AddPageForm extends React.Component {
 
   _onSubmitPage(e) {
     e.preventDefault();
-    var data = this._getPageData();
-    console.log('_onSubmitPage', data);
+    if (this.state.processing) return;
 
+    this.setState({processing: true});
     ApiRequest.post('/page')
-      .data(data)
-      .send(page => console.log('page:', page));
+      .data(this._getPageData())
+      .send(page => {
+        console.log('page:', page);
+        this._clearForm();
+      });
+  }
 
+  _clearForm() {
+    document.getElementById("addNewPage").reset();
+    this.setState({processing: false});
   }
 
   _onUserChange(user) {
@@ -163,5 +191,10 @@ var styles = {
     fontWeight: "bold",
     textAlign: "center",
     padding: "40px 0",
+  },
+  progressBar: {
+    fontSize: "18px",
+    padding: "10px 0",
+    width: "100%",
   },
 };
