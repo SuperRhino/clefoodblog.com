@@ -105,7 +105,7 @@ export default class AddPageForm extends React.Component {
               <input ref="pageUri"
                     type="text"
                     className="form-control input-lg"
-                    placeholder="page-url"
+                    placeholder="Custom-Page-Url"
                     value={this.state.page.uri}
                     onChange={this._onChangeUri}
                     onBlur={this._onBlurUri} />
