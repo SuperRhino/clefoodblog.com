@@ -80,4 +80,16 @@ export default class Utils {
     if (Object.getOwnPropertyNames(obj).length > 0) return false;
     return true;
   }
+
+  /**
+   * Clean string for use in URL
+   * @param  {string} str
+   * @return {string} uri
+   * Credit: http://stackoverflow.com/a/14962369/5780385
+   */
+  static cleanForUrl(str) {
+    return str.replace(/(^\-+|[^a-zA-Z0-9\/_| -]+|\-+$)/g, '')
+              .toLowerCase()
+              .replace(/[\/_| -]+/g, '-');
+  }
 }

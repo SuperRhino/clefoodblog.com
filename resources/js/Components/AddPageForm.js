@@ -1,6 +1,8 @@
 import React from 'react';
 import moment from 'moment';
 import DateTimeInput from 'react-bootstrap-datetimepicker';
+
+import Utils from '../Utils/Utils';
 import ApiRequest from '../Api/ApiRequest';
 import CurrentUser from '../Stores/CurrentUser';
 
@@ -12,15 +14,20 @@ export default class AddPageForm extends React.Component {
     super(props);
 
     this.postTimestamp = null;
+    this.hasCustomUri = false;
 
     this.state = {
       authorized: true,
       processing: false,
       user: this.props.user,
+      page: {},
     };
 
     this._onSubmitPage = this._onSubmitPage.bind(this);
     this._onPostDateChange = this._onPostDateChange.bind(this);
+    this._onUpdatePageUri = this._onUpdatePageUri.bind(this);
+    this._onChangeUri = this._onChangeUri.bind(this);
+    this._onBlurUri = this._onBlurUri.bind(this);
     this._onUserChange = this._onUserChange.bind(this);
   }
 
@@ -77,10 +84,10 @@ export default class AddPageForm extends React.Component {
         </div>
         <div className="row">
           <div className="col-xs-4">
-            <p className="lead"><em>Add meta data:</em></p>
+            <p className="lead"><em>Data about data:</em></p>
           </div>
           <div className="col-xs-8">
-            <p className="lead"><em>Write article:</em></p>
+            <p className="lead"><em>Spit your knowledge game:</em></p>
           </div>
         </div>
         <div className="row">
@@ -95,7 +102,13 @@ export default class AddPageForm extends React.Component {
                 onChange={this._onPostDateChange} />
             </div>
             <div className="form-group">
-              <input ref="pageUri" className="form-control input-lg" type="text" placeholder="page-url" />
+              <input ref="pageUri"
+                    type="text"
+                    className="form-control input-lg"
+                    placeholder="page-url"
+                    value={this.state.page.uri}
+                    onChange={this._onChangeUri}
+                    onBlur={this._onBlurUri} />
             </div>
             <div className="form-group">
               <select ref="pageCategory" className="form-control input-lg">
@@ -108,7 +121,7 @@ export default class AddPageForm extends React.Component {
               </select>
             </div>
             <div className="form-group">
-              <div style={styles.previewImage}>Drag Preview Image Here</div>
+              <div style={styles.previewImage}>Dragon Drop Image Area</div>
             </div>
             <div className="form-group">
               <input ref="metaTitle" className="form-control input-lg" type="text" placeholder="Enter meta title" />
@@ -122,7 +135,8 @@ export default class AddPageForm extends React.Component {
           </div>
           <div className="col-xs-8">
             <div className="form-group">
-                <input ref="pageTitle" className="form-control input-lg" type="text" placeholder="Headline" />
+                <input ref="pageTitle" className="form-control input-lg" type="text" placeholder="Headline"
+                  onChange={this._onUpdatePageUri} />
             </div>
             <div className="form-group">
               <textarea ref="pageArticle" className="form-control input-lg" rows="10" placeholder={placeholderCopy}></textarea>
@@ -136,17 +150,18 @@ export default class AddPageForm extends React.Component {
 
   _onPostDateChange(datetime) {
     this.postTimestamp = datetime;
+    this._onUpdatePageUri();
   }
 
-  _getPostDateFormat() {
-    return moment.unix(this.postTimestamp / 1000).format("YYYY-MM-DD HH:mm:00");
+  _getPostDateFormat(format = "YYYY-MM-DD HH:mm:00") {
+    return moment.unix(this.postTimestamp / 1000).format(format);
   }
 
   _getPageData() {
     return {
       title: this.refs.pageTitle.value,
       article: this.refs.pageArticle.value,
-      uri: this.refs.pageUri.value,
+      uri: this.state.page.uri || this.refs.pageUri.value,
       category: this.refs.pageCategory.value,
       meta_title: this.refs.metaTitle.value,
       meta_description: this.refs.metaDescription.value,
@@ -171,6 +186,36 @@ export default class AddPageForm extends React.Component {
   _clearForm() {
     document.getElementById("addNewPage").reset();
     this.setState({processing: false});
+  }
+
+  _getUriFromTitle() {
+    let headline = this.refs.pageTitle.value,
+        postDate = this.postTimestamp ? this._getPostDateFormat("-YYYY-MM-DD") : "";
+    return Utils.cleanForUrl(headline+postDate);
+  }
+
+  _onBlurUri(e) {
+    if (! e.target.value) {
+      this.hasCustomUri = false;
+      this._onUpdatePageUri();
+    }
+  }
+
+  _onChangeUri(e) {
+    this.hasCustomUri = true;
+
+    let page = this.state.page;
+    page.uri = this.refs.pageUri.value;
+    this.setState({page});
+    return true;
+  }
+
+  _onUpdatePageUri() {
+    if (this.hasCustomUri) return;
+
+    let page = this.state.page;
+    page.uri = this._getUriFromTitle();
+    this.setState({page});
   }
 
   _onUserChange(user) {
