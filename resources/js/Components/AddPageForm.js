@@ -77,7 +77,7 @@ export default class AddPageForm extends React.Component {
     let editorOptions = {
       placeholder: {text: "Article body..."},
       toolbar: {
-        buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote'],
+        buttons: ['bold', 'italic', 'anchor', 'h2', 'h3', 'quote', 'unorderedlist'],
       },
     };
 
