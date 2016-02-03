@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import Editor from 'react-medium-editor';
 import DateTimeInput from 'react-bootstrap-datetimepicker';
 
 import Utils from '../Utils/Utils';
@@ -20,7 +21,8 @@ export default class AddPageForm extends React.Component {
       authorized: true,
       processing: false,
       user: this.props.user,
-      page: {},
+      article: "",
+      uri: "",
     };
 
     this._onSubmitPage = this._onSubmitPage.bind(this);
@@ -28,6 +30,7 @@ export default class AddPageForm extends React.Component {
     this._onUpdatePageUri = this._onUpdatePageUri.bind(this);
     this._onChangeUri = this._onChangeUri.bind(this);
     this._onBlurUri = this._onBlurUri.bind(this);
+    this._onArticleChange = this._onArticleChange.bind(this);
     this._onUserChange = this._onUserChange.bind(this);
   }
 
@@ -71,12 +74,17 @@ export default class AddPageForm extends React.Component {
   render() {
     if (! this.state.authorized) return <h4>Must be logged in :(</h4>;
 
-    let placeholderCopy = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi iaculis est lectus, posuere scelerisque massa rhoncus in. Vestibulum facilisis purus non velit porttitor, non imperdiet erat condimentum.";
+    let editorOptions = {
+      placeholder: {text: "Article body..."},
+      toolbar: {
+        buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote'],
+      },
+    };
 
     // add .has-success or .has-error
     // .glyphicon-ok or .glyphicon-remove
     return (
-      <form id="addNewPage" className="" role="form" onSubmit={this._onSubmitPage}>
+      <form ref="addNewPage" className="" role="form" onSubmit={this._onSubmitPage}>
         <div className="row">
           <div className="col-xs-12">
             <h1>Add New Page</h1>
@@ -106,7 +114,7 @@ export default class AddPageForm extends React.Component {
                     type="text"
                     className="form-control input-lg"
                     placeholder="Custom-Page-Url"
-                    value={this.state.page.uri}
+                    value={this.state.uri}
                     onChange={this._onChangeUri}
                     onBlur={this._onBlurUri} />
             </div>
@@ -139,7 +147,12 @@ export default class AddPageForm extends React.Component {
                   onChange={this._onUpdatePageUri} />
             </div>
             <div className="form-group">
-              <textarea ref="pageArticle" className="form-control input-lg" rows="10" placeholder={placeholderCopy}></textarea>
+              <Editor
+                style={styles.editor}
+                className="form-control input-lg"
+                text={this.state.article}
+                onChange={this._onArticleChange}
+                options={editorOptions} />
             </div>
             {this.renderSubmitButton()}
           </div>
@@ -154,14 +167,18 @@ export default class AddPageForm extends React.Component {
   }
 
   _getPostDateFormat(format = "YYYY-MM-DD HH:mm:00") {
-    return moment.unix(this.postTimestamp / 1000).format(format);
+    let dateFormat = moment.unix(this.postTimestamp / 1000).format(format);
+    if (dateFormat == 'Invalid date') {
+      return "";
+    }
+    return dateFormat;
   }
 
   _getPageData() {
     return {
       title: this.refs.pageTitle.value,
-      article: this.refs.pageArticle.value,
-      uri: this.state.page.uri || this.refs.pageUri.value,
+      article: this.state.article, // this.refs.pageArticle.value,
+      uri: this.state.uri || this.refs.pageUri.value,
       category: this.refs.pageCategory.value,
       meta_title: this.refs.metaTitle.value,
       meta_description: this.refs.metaDescription.value,
@@ -184,12 +201,18 @@ export default class AddPageForm extends React.Component {
   }
 
   _clearForm() {
-    document.getElementById("addNewPage").reset();
-    this.setState({processing: false});
+    this.refs.addNewPage.reset();
+    this.postTimestamp = null;
+    this.hasCustomUri = false;
+    this.setState({
+      processing: false,
+      article: "",
+      uri: "",
+    });
   }
 
   _getUriFromTitle() {
-    let headline = this.refs.pageTitle.value,
+    let headline = this.refs.pageTitle.value || 'untitled',
         postDate = this.postTimestamp ? this._getPostDateFormat("-YYYY-MM-DD") : "";
     return Utils.cleanForUrl(headline+postDate);
   }
@@ -204,18 +227,18 @@ export default class AddPageForm extends React.Component {
   _onChangeUri(e) {
     this.hasCustomUri = true;
 
-    let page = this.state.page;
-    page.uri = this.refs.pageUri.value;
-    this.setState({page});
+    this.setState({uri: this.refs.pageUri.value});
     return true;
   }
 
   _onUpdatePageUri() {
     if (this.hasCustomUri) return;
 
-    let page = this.state.page;
-    page.uri = this._getUriFromTitle();
-    this.setState({page});
+    this.setState({uri: this._getUriFromTitle()});
+  }
+
+  _onArticleChange(article, medium) {
+    this.setState({article});
   }
 
   _onUserChange(user) {
@@ -227,6 +250,10 @@ export default class AddPageForm extends React.Component {
 var styles = {
   button: {
     width: '100%',
+  },
+  editor: {
+    height: "auto",
+    minHeight: "20em",
   },
   previewImage: {
     color: "rgb(150,150,150)",

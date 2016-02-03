@@ -68,7 +68,7 @@ class Page extends Model {
             'article' => $this->article,
             'preview_image' => $this->preview_image,
             'category' => $this->category,
-            'meta_title' => $this->meta_title,
+            'meta_title' => ! empty($this->meta_title) ? $this->meta_title : $this->title,
             'meta_description' => $this->meta_description,
             'meta_keywords' => $this->meta_keywords,
             'post_date' => $this->post_date,

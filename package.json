@@ -9,6 +9,7 @@
     "react": "^0.14.2",
     "react-bootstrap-datetimepicker": "0.0.22",
     "react-dom": "^0.14.2",
+    "react-medium-editor": "^1.6.2",
     "reflux": "^0.3.0",
     "superagent": "^1.6.1"
   },

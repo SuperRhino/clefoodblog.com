@@ -15,8 +15,7 @@
         <div class="row">
           <div class="col-xs-8 col-xs-offset-2">
             <p><em>{{ page.updated_date is empty ? page.post_date|date("M j, Y") : page.updated_date|date("M j, Y") }}</em></p>
-
-            <p>{{ data.page.article }}</p>
+            {{ data.page.article|raw }}
           </div>
 
         </div>
