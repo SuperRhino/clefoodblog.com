@@ -33,13 +33,4 @@ class HomeController extends BaseController
 
         return $this->view('blog-page.html', ['page' => $page->toArray()]);
     }
-
-    /**
-     * ADMIN ROUTE
-     * add an event
-     */
-    public function addPage()
-    {
-        return $this->view('add-page.html');
-    }
 }

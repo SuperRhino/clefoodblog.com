@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import path from 'path';
 import Utils from '../Utils/Utils';
-import AddPageForm from '../Components/AddPageForm';
+import PageEditor from '../Views/PageEditor';
+import PageInventory from '../Views/PageInventory';
 
 export default class Routes {
 
@@ -24,10 +25,21 @@ export default class Routes {
     console.log('Home route');
   }
 
-  static addPage() {
+  //----------------------------
+  // Admin Routes:
+  //----------------------------
+
+  static pageEditor() {
     ReactDOM.render(
-      <AddPageForm />,
-      document.getElementById('AddPageForm')
+      <PageEditor />,
+      document.getElementById('PageEditor')
+    );
+  }
+
+  static pageInventory() {
+    ReactDOM.render(
+      <PageInventory />,
+      document.getElementById('PageInventory')
     );
   }
 

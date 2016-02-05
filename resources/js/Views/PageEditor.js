@@ -7,7 +7,7 @@ import Utils from '../Utils/Utils';
 import ApiRequest from '../Api/ApiRequest';
 import CurrentUser from '../Stores/CurrentUser';
 
-export default class AddPageForm extends React.Component {
+export default class PageEditor extends React.Component {
   static propTypes = {};
   static defaultProps = {};
 
@@ -19,6 +19,7 @@ export default class AddPageForm extends React.Component {
 
     this.state = {
       authorized: true,
+      publishing: false,
       processing: false,
       user: this.props.user,
       article: "",
@@ -26,6 +27,7 @@ export default class AddPageForm extends React.Component {
     };
 
     this._onSubmitPage = this._onSubmitPage.bind(this);
+    this._onPublish = this._onPublish.bind(this);
     this._onPostDateChange = this._onPostDateChange.bind(this);
     this._onUpdatePageUri = this._onUpdatePageUri.bind(this);
     this._onChangeUri = this._onChangeUri.bind(this);
@@ -49,10 +51,11 @@ export default class AddPageForm extends React.Component {
   }
 
   renderProgressBar() {
+    let barClassName = this.state.publishing ? 'progress-bar-success' : 'progress-bar-info';
     return (
       <div className="progress" style={{height: "auto"}}>
-        <div className="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={styles.progressBar}>
-          Saving...
+        <div className={"progress-bar "+barClassName+" progress-bar-striped active"} role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style={styles.progressBar}>
+          {this.state.publishing ? 'Publishing...' : 'Saving...'}
         </div>
       </div>
     );
@@ -64,10 +67,16 @@ export default class AddPageForm extends React.Component {
     }
 
     return (
-      <button type="submit" className="btn btn-lg btn-info" style={styles.button}>
-        <span className="glyphicon glyphicon-plus-sign"></span>
-        {' Add Page'}
-      </button>
+      <div>
+        <button type="submit" className="btn btn-lg btn-info" style={styles.button}>
+          <span className="glyphicon glyphicon-plus-sign"></span>
+          {' Save Page'}
+        </button>
+        <button type="button" className="btn btn-lg btn-success" style={styles.button} onClick={this._onPublish}>
+          <span className="glyphicon glyphicon-ok-sign"></span>
+          {' Publish Page'}
+        </button>
+      </div>
     );
   }
 
@@ -81,13 +90,15 @@ export default class AddPageForm extends React.Component {
       },
     };
 
+    let categories = ["Reviews", "Recipes", "How To's", "Friday Food Fight", "Where To Find..."];
+
     // add .has-success or .has-error
     // .glyphicon-ok or .glyphicon-remove
     return (
-      <form ref="addNewPage" className="" role="form" onSubmit={this._onSubmitPage}>
+      <form ref="addNewPage" className="" role="form" onSubmit={e => this._onSubmitPage(e)}>
         <div className="row">
           <div className="col-xs-12">
-            <h1>Add New Page</h1>
+            <h1>Page Editor</h1>
           </div>
         </div>
         <div className="row">
@@ -121,11 +132,9 @@ export default class AddPageForm extends React.Component {
             <div className="form-group">
               <select ref="pageCategory" className="form-control input-lg">
                 <option value="">— Choose Category —</option>
-                <option>Reviews</option>
-                <option>Recipes</option>
-                <option>How To's</option>
-                <option>Friday Food Fight</option>
-                <option>Where To Find...</option>
+                {categories.map((category, index) => {
+                  return (<option key={'category-'+category}>{category}</option>);
+                })}
               </select>
             </div>
             <div className="form-group">
@@ -174,7 +183,7 @@ export default class AddPageForm extends React.Component {
     return dateFormat;
   }
 
-  _getPageData() {
+  _getPageData(publish = false) {
     return {
       title: this.refs.pageTitle.value,
       article: this.state.article, // this.refs.pageArticle.value,
@@ -184,16 +193,22 @@ export default class AddPageForm extends React.Component {
       meta_description: this.refs.metaDescription.value,
       meta_keywords: this.refs.metaKeywords.value,
       post_date: this.postTimestamp ? this._getPostDateFormat() : null,
+      publish: publish,
     };
   }
 
-  _onSubmitPage(e) {
+  _onPublish(e) {
+    this._onSubmitPage(e, true);
+  }
+
+  _onSubmitPage(e, publish = false) {
     e.preventDefault();
     if (this.state.processing) return;
 
-    this.setState({processing: true});
+    this.setState({processing: true, publishing: publish});
+    return;
     ApiRequest.post('/page')
-      .data(this._getPageData())
+      .data(this._getPageData(publish))
       .send(page => {
         console.log('page:', page);
         this._clearForm();
@@ -249,7 +264,8 @@ export default class AddPageForm extends React.Component {
 
 var styles = {
   button: {
-    width: '100%',
+    width: '48%',
+    margin: '0 1%',
   },
   editor: {
     height: "auto",

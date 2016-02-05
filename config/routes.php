@@ -22,8 +22,9 @@ $must_auth = function($request, $response, $next)
  * Public Pages Routes:
  */
 $this->get('/', 'App\Controllers\HomeController:index');
-$this->get('/add-page', 'App\Controllers\HomeController:addPage');
 $this->get('/{pageName}', 'App\Controllers\HomeController:showPage');
+$this->get('/admin/page-editor', 'App\Controllers\AdminController:pageEditor');
+$this->get('/admin/page-inventory', 'App\Controllers\AdminController:pageInventory');
 
 /**
  * API Routes:
