@@ -34,6 +34,7 @@ $this->post('/api/account/logout', 'App\Controllers\Api\AccountController:logout
 $this->get('/api/account', 'App\Controllers\Api\AccountController:getUser')->add($must_auth);
 
 $this->post('/api/page', 'App\Controllers\Api\PageController:addPage')->add($must_auth);
+$this->post('/api/upload-file', 'App\Controllers\Api\PageController:uploadFile')->add($must_auth);
 
 // Catch all for any API route
 $this->any('/api/{endpoint}', 'Core\BaseApiController:notFound');

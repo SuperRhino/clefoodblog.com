@@ -6,6 +6,7 @@ import DateTimeInput from 'react-bootstrap-datetimepicker';
 import Utils from '../Utils/Utils';
 import ApiRequest from '../Api/ApiRequest';
 import CurrentUser from '../Stores/CurrentUser';
+import SRDropzone from '../Components/SRDropzone';
 
 export default class PageEditor extends React.Component {
   static propTypes = {};
@@ -83,10 +84,18 @@ export default class PageEditor extends React.Component {
   render() {
     if (! this.state.authorized) return <h4>Must be logged in :(</h4>;
 
+    let imageButton = {
+      name: 'image',
+      action: 'image',
+      aria: 'image',
+      tagNames: ['img'],
+      contentDefault: '<b>image</b>',
+      contentFA: '<i class="fa fa-picture-o"></i>'
+    };
     let editorOptions = {
       placeholder: {text: "Article body..."},
       toolbar: {
-        buttons: ['bold', 'italic', 'anchor', 'h2', 'h3', 'quote', 'unorderedlist'],
+        buttons: ['bold', 'italic', 'anchor', 'h2', 'h3', 'quote', 'unorderedlist', imageButton],
       },
     };
 
@@ -138,7 +147,10 @@ export default class PageEditor extends React.Component {
               </select>
             </div>
             <div className="form-group">
-              <div style={styles.previewImage}>Dragon Drop Image Area</div>
+              <SRDropzone
+                style={styles.previewImage}
+                activeStyle={styles.dragActive}
+                multiple={false} />
             </div>
             <div className="form-group">
               <input ref="metaTitle" className="form-control input-lg" type="text" placeholder="Enter meta title" />
@@ -206,7 +218,6 @@ export default class PageEditor extends React.Component {
     if (this.state.processing) return;
 
     this.setState({processing: true, publishing: publish});
-    return;
     ApiRequest.post('/page')
       .data(this._getPageData(publish))
       .send(page => {
@@ -279,6 +290,9 @@ var styles = {
     fontWeight: "bold",
     textAlign: "center",
     padding: "40px 0",
+  },
+  dragActive: {
+    borderColor: 'rgb(120,120,120)',
   },
   progressBar: {
     fontSize: "18px",

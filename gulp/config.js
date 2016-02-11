@@ -10,5 +10,7 @@ module.exports = {
     "./node_modules/react-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css",
     "./node_modules/react-medium-editor/node_modules/medium-editor/dist/css/medium-editor.css",
     "./node_modules/react-medium-editor/node_modules/medium-editor/dist/css/themes/default.css",
+    "./node_modules/dropzone/dist/basic.css",
+    "./node_modules/dropzone/dist/dropzone.css",
   ],
 };

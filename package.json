@@ -5,6 +5,7 @@
   "main": "js/bundle.js",
   "dependencies": {
     "bootstrap": "^3.3.6",
+    "dropzone": "^4.2.0",
     "jquery": "^2.2.0",
     "keymirror": "^0.1.1",
     "moment": "^2.11.2",

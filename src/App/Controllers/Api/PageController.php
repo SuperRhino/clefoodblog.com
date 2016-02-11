@@ -24,4 +24,12 @@ class PageController extends BaseApiController
 
         return $this->success($page->toArray());
     }
+
+    public function uploadFile()
+    {
+        // $pageId = $this->params('pageId');
+        return $this->success([
+            'FILES' => $_FILES,
+        ]);
+    }
 }
