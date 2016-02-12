@@ -17,6 +17,7 @@ class Page extends Model {
     var $author_id;
     var $post_date;
     var $updated_date;
+    var $status;
 
     function __construct($values = [])
     {
@@ -32,6 +33,7 @@ class Page extends Model {
         $this->author_id = (int) array_get($values, 'author_id');
         $this->post_date = array_get($values, 'post_date') ?: date('Y-m-d H:i:s');
         $this->updated_date = array_get($values, 'updated_date');
+        $this->status = array_get($values, 'publish') ? 1 : 0;
     }
 
     public function save()
@@ -43,18 +45,27 @@ class Page extends Model {
 
     protected function createPage()
     {
-        $insert = 'INSERT INTO pages (title, uri, article, preview_image, category, meta_title, meta_description, meta_keywords, author_id, post_date)
-                    VALUES ("'.$this->title.'",
-                            "'.$this->uri.'",
-                            "'.$this->article.'",
-                            "'.$this->preview_image.'",
-                            "'.$this->category.'",
-                            "'.$this->meta_title.'",
-                            "'.$this->meta_description.'",
-                            "'.$this->meta_keywords.'",
-                            '.$this->author_id.',
-                            "'.$this->post_date.'")';
-        static::$app->db->query($insert);
+        $article = str_ireplace('<img ', '<img class="img-responsive" ', $this->article);
+
+        $insert = static::$app->query->newInsert();
+        $insert->into('pages')
+               ->cols([
+                   'title' => $this->title,
+                   'uri' => $this->uri,
+                   'article' => $article,
+                   'preview_image' => $this->preview_image,
+                   'category' => $this->category,
+                   'meta_title' => $this->meta_title,
+                   'meta_description' => $this->meta_description,
+                   'meta_keywords' => $this->meta_keywords,
+                   'author_id' => $this->author_id,
+                   'post_date' => $this->post_date,
+                   'status' => $this->status,
+               ]);
+
+        // prepare the statement + execute with bound values
+        $sth = static::$app->db->prepare($insert->getStatement());
+        $sth->execute($insert->getBindValues());
 
         return static::$app->db->lastInsertId();
     }
@@ -81,6 +92,7 @@ class Page extends Model {
         $query = static::$app->query->newSelect();
         $query->cols(['*'])
               ->from('pages')
+              ->where('status=1')
               ->orderBy(['if(updated_date, updated_date, post_date) desc'])
               ->limit($limit);
 
@@ -98,6 +110,7 @@ class Page extends Model {
         $query = static::$app->query->newSelect();
         $query->cols(['*'])
               ->from('pages')
+              ->where('status=1')
               ->where('uri="'.$pageName.'"')
               ->limit($limit);
 

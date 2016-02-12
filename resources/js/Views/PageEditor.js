@@ -89,7 +89,7 @@ export default class PageEditor extends React.Component {
       action: 'image',
       aria: 'image',
       tagNames: ['img'],
-      contentDefault: '<b>image</b>',
+      contentDefault: '<i class="glyphicon glyphicon-picture"></i>',
       contentFA: '<i class="fa fa-picture-o"></i>'
     };
     let editorOptions = {
