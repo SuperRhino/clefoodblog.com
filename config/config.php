@@ -24,6 +24,9 @@ $container = new Slim\Container([
         'app.paths.css'   => '/build/css',
         'app.assets'      => $assets,
 
+        'app.paths.upload_path' => '/public/uploads',
+        'app.paths.upload_dir'  => '/uploads',
+
         'hashids.salt'       => 'C7WPHfv6N73WxzNfDPDtGEHmzUKbbyE2',
         'hashids.min-length' => 3,
 
