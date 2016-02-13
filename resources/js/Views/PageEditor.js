@@ -225,7 +225,7 @@ export default class PageEditor extends React.Component {
     e.preventDefault();
     if (this.state.processing) return;
 
-    let endpoint = this.state.pageId ? '/page/' + this.state.pageId : '/page';
+    let endpoint = this.state.pageId ? '/pages/' + this.state.pageId : '/pages';
 
     this.setState({processing: true, publishing: publish});
     ApiRequest.post(endpoint)

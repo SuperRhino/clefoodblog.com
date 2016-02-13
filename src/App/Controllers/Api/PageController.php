@@ -9,6 +9,12 @@ use Core\Http\Exception\NotFoundException;
 
 class PageController extends BaseApiController
 {
+    public function getPages()
+    {
+        $pages = Page::findAll();
+        return $this->success($pages);
+    }
+
     public function addPage()
     {
         $user = $this->app->getCurrentUser();

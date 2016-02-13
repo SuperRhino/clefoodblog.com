@@ -160,7 +160,7 @@ class Page extends Model {
         $query->cols(['*'])
               ->from('pages')
               ->where('status=1')
-              ->orderBy(['if(updated_date, updated_date, post_date) desc'])
+              ->orderBy(['updated_date desc'])
               ->limit($limit);
 
         $pages = [];
@@ -202,5 +202,21 @@ class Page extends Model {
         }
 
         return new Page($result);
+    }
+
+    public static function findAll()
+    {
+        $query = static::$app->query->newSelect();
+        $query->cols(['*'])
+              ->from('pages')
+              ->orderBy(['if(updated_date, updated_date, post_date) desc']);
+
+        $pages = [];
+        $res = static::$app->db->fetchAll($query);
+        foreach ($res as $page) {
+            $pages []= (new Page($page))->toArray();
+        }
+
+        return $pages;
     }
 }

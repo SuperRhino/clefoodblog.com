@@ -12,8 +12,10 @@ export default class PageInventory extends React.Component {
     super(props);
 
     this.state = {
+      loading: true,
       authorized: true,
       user: this.props.user,
+      pages: [],
     };
 
     this._onUserChange = this._onUserChange.bind(this);
@@ -21,6 +23,7 @@ export default class PageInventory extends React.Component {
 
   componentWillMount() {
     this.stopUserSubscribe = CurrentUser.listen(this._onUserChange);
+    this._loadPages();
 
     let user = CurrentUser.get();
     this.setState({
@@ -33,12 +36,42 @@ export default class PageInventory extends React.Component {
     this.stopUserSubscribe();
   }
 
+  renderRow(page, index) {
+    return (
+      <tr key={'page-'+index}>
+        <td>{page.id}</td>
+        <td>{page.title}</td>
+      </tr>
+    );
+  }
+
   render() {
+    if (this.state.loading) return <h4>Loading...</h4>;
     if (! this.state.authorized) return <h4>Must be logged in :(</h4>;
 
+    if (this.state.pages.length === 0) {
+      return <h4>No pages available :(</h4>;
+    }
+
     return (
-      <div>Page Inventory</div>
+      <table className="table table-striped table-hover">
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+        </tr>
+        {this.state.pages.map(this.renderRow.bind(this))}
+      </table>
     );
+  }
+
+  _loadPages() {
+    ApiRequest.get('/pages')
+      .send(res => {
+        this.setState({
+          loading: false,
+          pages: res.data,
+        });
+      }, () => this.setState({loading: false}));
   }
 
   _onUserChange(user) {
