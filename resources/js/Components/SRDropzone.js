@@ -1,5 +1,6 @@
 import React from 'react';
 import Dropzone from 'dropzone';
+import {Config} from '../Utils/Constants';
 import Utils from '../Utils/Utils';
 import ApiUtils from '../Api/ApiUtils';
 import AccessToken from '../Api/AccessToken';
@@ -29,11 +30,19 @@ export default class SRDropzone extends React.Component {
       .then(token => {
         let dzOptions = {
           url: ApiUtils.buildUrl('/upload-file?token='+token),
-          dictDefaultMessage: "Dragon Drop Image Area",
+          dictDefaultMessage: "Dragon Drop Images or Click to Upload",
           init: function() {
+
             this.on("success", (file, response) => {
               console.log(file, response);
             });
+
+            this.on("addedfile", file => {
+              // Append baseUrl to the file preview element.
+              let dzName = file.previewElement.querySelector('[data-dz-name]')
+              dzName.innerHTML = Config.uploads_dir + file.name;
+            });
+
           },
         };
         this.dropzone = new Dropzone(this.refs.dropzone, dzOptions);

@@ -147,10 +147,7 @@ export default class PageEditor extends React.Component {
               </select>
             </div>
             <div className="form-group">
-              <SRDropzone
-                style={styles.previewImage}
-                activeStyle={styles.dragActive}
-                multiple={false} />
+              <input ref="previewImage" className="form-control input-lg" type="text" placeholder="Preview Image URL" />
             </div>
             <div className="form-group">
               <input ref="metaTitle" className="form-control input-lg" type="text" placeholder="Enter meta title" />
@@ -178,6 +175,14 @@ export default class PageEditor extends React.Component {
             {this.renderSubmitButton()}
           </div>
         </div>
+        <div className="row" style={styles.uploaderRow}>
+          <div className="col-xs-12">
+            <SRDropzone
+              style={styles.previewImage}
+              activeStyle={styles.dragActive}
+              multiple={false} />
+          </div>
+        </div>
       </form>
     );
   }
@@ -201,6 +206,7 @@ export default class PageEditor extends React.Component {
       article: this.state.article, // this.refs.pageArticle.value,
       uri: this.state.uri || this.refs.pageUri.value,
       category: this.refs.pageCategory.value,
+      preview_image: this.refs.previewImage.value,
       meta_title: this.refs.metaTitle.value,
       meta_description: this.refs.metaDescription.value,
       meta_keywords: this.refs.metaKeywords.value,
@@ -298,5 +304,8 @@ var styles = {
     fontSize: "18px",
     padding: "10px 0",
     width: "100%",
+  },
+  uploaderRow: {
+    marginTop: "15px",
   },
 };
