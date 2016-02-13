@@ -1,10 +1,24 @@
 import { Config, } from './Constants';
+import Humane from 'humane-js';
 
 export default class Utils {
 
-  static alertError(message) {
-    alert(message);
-  }
+  static showMessage = Humane.spawn({
+    addnCls: 'bg-info text-info',
+    waitForMove: true,
+  });
+
+  static showSuccess = Humane.spawn({
+    addnCls: 'bg-success text-success',
+    waitForMove: true,
+  });
+
+  static showError = Humane.spawn({
+    addnCls: 'bg-danger text-danger',
+    timeout: 5000,
+    clickToClose: true,
+    waitForMove: true,
+  });
 
   /**
    * Get JSON data from another server. Supported back to IE6.
