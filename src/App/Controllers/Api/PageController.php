@@ -25,6 +25,28 @@ class PageController extends BaseApiController
         return $this->success($page->toArray());
     }
 
+    public function updatePage($request)
+    {
+        $user = $this->app->getCurrentUser();
+        if (! $user) {
+            throw new NotFoundException('User not found');
+        }
+
+        $pageId = (int) $request->getAttribute('id');
+        $page = Page::findById($pageId);
+        if (! $page) {
+            throw new NotFoundException('Page ('.$pageId.') not found');
+        }
+
+        $pageData = $this->json();
+        $pageData['author_id'] = $user->id;
+
+        $page->updateData($pageData);
+        $page->save();
+
+        return $this->success($page->toArray());
+    }
+
     public function uploadFile()
     {
         // $pageId = $this->params('pageId');

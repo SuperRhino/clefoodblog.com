@@ -25,6 +25,7 @@ export default class PageEditor extends React.Component {
       user: this.props.user,
       article: "",
       uri: "",
+      pageId: null,
     };
 
     this._onSubmitPage = this._onSubmitPage.bind(this);
@@ -173,6 +174,7 @@ export default class PageEditor extends React.Component {
                 options={editorOptions} />
             </div>
             {this.renderSubmitButton()}
+            <input ref="pageId" type="hidden" name="pageId" value={this.state.pageId} />
           </div>
         </div>
         <div className="row" style={styles.uploaderRow}>
@@ -223,12 +225,20 @@ export default class PageEditor extends React.Component {
     e.preventDefault();
     if (this.state.processing) return;
 
+    let endpoint = this.state.pageId ? '/page/' + this.state.pageId : '/page';
+
     this.setState({processing: true, publishing: publish});
-    ApiRequest.post('/page')
+    ApiRequest.post(endpoint)
       .data(this._getPageData(publish))
-      .send(page => {
-        console.log('page:', page);
-        this._clearForm();
+      .send(res => {
+        let page = res.data,
+            message = publish ? 'Page published!' : 'Page saved!';
+        Utils.showSuccess(message);
+        this.setState({
+          processing: false,
+          pageId: page.id,
+        });
+        // this._clearForm();
       });
   }
 

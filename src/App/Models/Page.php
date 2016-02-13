@@ -36,10 +36,49 @@ class Page extends Model {
         $this->status = array_get($values, 'publish') ? 1 : 0;
     }
 
+    public function updateData($values = [])
+    {
+        if (isset($values['title'])) {
+            $this->title = array_get($values, 'title');
+        }
+        if (isset($values['uri'])) {
+            $this->uri = array_get($values, 'uri');
+        }
+        if (isset($values['article'])) {
+            $this->article = array_get($values, 'article');
+        }
+        if (isset($values['preview_image'])) {
+            $this->preview_image = array_get($values, 'preview_image');
+        }
+        if (isset($values['category'])) {
+            $this->category = array_get($values, 'category');
+        }
+        if (isset($values['meta_title'])) {
+            $this->meta_title = array_get($values, 'meta_title');
+        }
+        if (isset($values['meta_description'])) {
+            $this->meta_description = array_get($values, 'meta_description');
+        }
+        if (isset($values['meta_keywords'])) {
+            $this->meta_keywords = array_get($values, 'meta_keywords');
+        }
+        if (isset($values['author_id'])) {
+            $this->author_id = (int) array_get($values, 'author_id');
+        }
+        if (isset($values['post_date'])) {
+            $this->post_date = array_get($values, 'post_date');
+        }
+        if (isset($values['publish'])) {
+            $this->status = array_get($values, 'publish') ? 1 : 0;
+        }
+    }
+
     public function save()
     {
         if (! $this->id) {
-            $this->id = $this->createPage();
+            $this->createPage();
+        } else {
+            $this->updatePage();
         }
     }
 
@@ -67,7 +106,35 @@ class Page extends Model {
         $sth = static::$app->db->prepare($insert->getStatement());
         $sth->execute($insert->getBindValues());
 
-        return static::$app->db->lastInsertId();
+        $this->id = static::$app->db->lastInsertId();
+
+        return $this->id;
+    }
+
+    protected function updatePage()
+    {
+        $update = static::$app->query->newUpdate();
+        $update->table('pages')
+               ->cols([
+                   'title' => $this->title,
+                   'uri' => $this->uri,
+                   'article' => $this->article,
+                   'preview_image' => $this->preview_image,
+                   'category' => $this->category,
+                   'meta_title' => $this->meta_title,
+                   'meta_description' => $this->meta_description,
+                   'meta_keywords' => $this->meta_keywords,
+                   'author_id' => $this->author_id,
+                   'post_date' => $this->post_date,
+                   'status' => $this->status,
+               ])
+               ->where('id = ?', $this->id);
+
+        // prepare the statement + execute with bound values
+        $sth = static::$app->db->prepare($update->getStatement());
+        $sth->execute($update->getBindValues());
+
+        return $this->id;
     }
 
     public function toArray()
@@ -113,6 +180,21 @@ class Page extends Model {
               ->where('status=1')
               ->where('uri="'.$pageName.'"')
               ->limit($limit);
+
+        $result = static::$app->db->fetchOne($query);
+        if (! $result) {
+            return null;
+        }
+
+        return new Page($result);
+    }
+
+    public static function findById($pageId)
+    {
+        $query = static::$app->query->newSelect();
+        $query->cols(['*'])
+              ->from('pages')
+              ->where('id='.$pageId);
 
         $result = static::$app->db->fetchOne($query);
         if (! $result) {
