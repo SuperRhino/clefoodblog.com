@@ -55,11 +55,13 @@ export default class PageInventory extends React.Component {
 
     return (
       <table className="table table-striped table-hover">
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-        </tr>
-        {this.state.pages.map(this.renderRow.bind(this))}
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+          </tr>
+          {this.state.pages.map(this.renderRow.bind(this))}
+        </tbody>
       </table>
     );
   }
