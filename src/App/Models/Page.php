@@ -33,7 +33,7 @@ class Page extends Model {
         $this->author_id = (int) array_get($values, 'author_id');
         $this->post_date = array_get($values, 'post_date') ?: date('Y-m-d H:i:s');
         $this->updated_date = array_get($values, 'updated_date');
-        $this->status = array_get($values, 'publish') ? 1 : 0;
+        $this->status = array_get($values, 'status') ? 1 : 0;
     }
 
     public function updateData($values = [])
@@ -68,8 +68,8 @@ class Page extends Model {
         if (isset($values['post_date'])) {
             $this->post_date = array_get($values, 'post_date');
         }
-        if (isset($values['publish'])) {
-            $this->status = array_get($values, 'publish') ? 1 : 0;
+        if (isset($values['status'])) {
+            $this->status = array_get($values, 'status') ? 1 : 0;
         }
     }
 
@@ -151,6 +151,7 @@ class Page extends Model {
             'meta_keywords' => $this->meta_keywords,
             'post_date' => $this->post_date,
             'updated_date' => $this->updated_date,
+            'status' => $this->status,
         ];
     }
 

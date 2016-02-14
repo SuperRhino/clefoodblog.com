@@ -41,6 +41,7 @@ export default class PageInventory extends React.Component {
       <tr key={'page-'+index}>
         <td>{page.id}</td>
         <td>{page.title}</td>
+        <td>{page.status  ? 'Published' : ''}</td>
       </tr>
     );
   }
@@ -59,6 +60,7 @@ export default class PageInventory extends React.Component {
           <tr>
             <th>ID</th>
             <th>Title</th>
+            <th>Status</th>
           </tr>
           {this.state.pages.map(this.renderRow.bind(this))}
         </tbody>

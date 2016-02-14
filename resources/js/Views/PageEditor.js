@@ -213,7 +213,7 @@ export default class PageEditor extends React.Component {
       meta_description: this.refs.metaDescription.value,
       meta_keywords: this.refs.metaKeywords.value,
       post_date: this.postTimestamp ? this._getPostDateFormat() : null,
-      publish: publish,
+      status: publish,
     };
   }
 
