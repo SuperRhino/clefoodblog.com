@@ -15,6 +15,17 @@ class PageController extends BaseApiController
         return $this->success($pages);
     }
 
+    public function getPage($request)
+    {
+        $pageId = (int) $request->getAttribute('id');
+        $page = Page::findById($pageId);
+        if (! $page) {
+            throw new NotFoundException('Page not found');
+        }
+
+        return $this->success($page);
+    }
+
     public function addPage()
     {
         $user = $this->app->getCurrentUser();

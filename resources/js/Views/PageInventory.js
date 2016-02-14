@@ -39,8 +39,8 @@ export default class PageInventory extends React.Component {
   renderRow(page, index) {
     return (
       <tr key={'page-'+index}>
-        <td>{page.id}</td>
-        <td>{page.title}</td>
+        <td><a href={"/admin/page-editor?id="+page.id}>{page.id}</a></td>
+        <td><a href={"/admin/page-editor?id="+page.id}>{page.title}</a></td>
         <td>{page.status  ? 'Published' : ''}</td>
       </tr>
     );

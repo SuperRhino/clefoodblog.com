@@ -35,6 +35,7 @@ $this->get('/api/account', 'App\Controllers\Api\AccountController:getUser')->add
 
 $this->get('/api/pages',         'App\Controllers\Api\PageController:getPages')->add($must_auth);
 $this->post('/api/pages',        'App\Controllers\Api\PageController:addPage')->add($must_auth);
+$this->get('/api/pages/{id}',   'App\Controllers\Api\PageController:getPage')->add($must_auth);
 $this->post('/api/pages/{id}',   'App\Controllers\Api\PageController:updatePage')->add($must_auth);
 $this->post('/api/upload-file',  'App\Controllers\Api\PageController:uploadFile')->add($must_auth);
 

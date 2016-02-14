@@ -30,8 +30,10 @@ export default class Routes {
   //----------------------------
 
   static pageEditor() {
+    let pageId = Utils.getQueryParam('id') || null;
+    if (pageId) pageId = parseInt(pageId);
     ReactDOM.render(
-      <PageEditor />,
+      <PageEditor pageId={pageId} />,
       document.getElementById('PageEditor')
     );
   }

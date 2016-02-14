@@ -83,6 +83,22 @@ export default class Utils {
   }
 
   /**
+   * Credit: http://stackoverflow.com/a/901144/5780385
+   * @param  {[type]} name [description]
+   * @param  {[type]} url  [description]
+   * @return {[type]}      [description]
+   */
+  static getQueryParam(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+  /**
    * Is object empty?
    * @param  obj
    * @return {Boolean}

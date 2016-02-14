@@ -9,8 +9,12 @@ import CurrentUser from '../Stores/CurrentUser';
 import SRDropzone from '../Components/SRDropzone';
 
 export default class PageEditor extends React.Component {
-  static propTypes = {};
-  static defaultProps = {};
+  static propTypes = {
+    pageId: React.PropTypes.number,
+  };
+  static defaultProps = {
+    pageId: null,
+  };
 
   constructor(props) {
     super(props);
@@ -23,9 +27,7 @@ export default class PageEditor extends React.Component {
       publishing: false,
       processing: false,
       user: this.props.user,
-      article: "",
-      uri: "",
-      pageId: null,
+      page: {},
     };
 
     this._onSubmitPage = this._onSubmitPage.bind(this);
@@ -46,6 +48,12 @@ export default class PageEditor extends React.Component {
       authorized: !! user.id,
       user,
     });
+  }
+
+  componentDidMount() {
+    if (this.props.pageId) {
+      this._loadPage(this.props.pageId);
+    }
   }
 
   componentWillUnmount() {
@@ -124,7 +132,7 @@ export default class PageEditor extends React.Component {
             <div className="form-group">
               <DateTimeInput
                 size={'lg'}
-                defaultText={''}
+                defaultText={this.state.page.post_date||''}
                 inputProps={{placeholder: "Article Date/Time"}}
                 format={'x'}
                 inputFormat={'YYYY-MM-DD hh:mm A'}
@@ -135,12 +143,14 @@ export default class PageEditor extends React.Component {
                     type="text"
                     className="form-control input-lg"
                     placeholder="Custom-Page-Url"
-                    value={this.state.uri}
+                    value={this.state.page.uri}
                     onChange={this._onChangeUri}
                     onBlur={this._onBlurUri} />
             </div>
             <div className="form-group">
-              <select ref="pageCategory" className="form-control input-lg">
+              <select ref="pageCategory" className="form-control input-lg"
+                value={this.state.page.category}
+                onChange={e => this._setStatePage({category: e.target.value})}>
                 <option value="">— Choose Category —</option>
                 {categories.map((category, index) => {
                   return (<option key={'category-'+category}>{category}</option>);
@@ -148,33 +158,42 @@ export default class PageEditor extends React.Component {
               </select>
             </div>
             <div className="form-group">
-              <input ref="previewImage" className="form-control input-lg" type="text" placeholder="Preview Image URL" />
+              <input ref="previewImage" className="form-control input-lg" type="text" placeholder="Preview Image URL"
+                     value={this.state.page.preview_image}
+                     onChange={e => this._setStatePage({preview_image: e.target.value})} />
             </div>
             <div className="form-group">
-              <input ref="metaTitle" className="form-control input-lg" type="text" placeholder="Enter meta title" />
+              <input ref="metaTitle" className="form-control input-lg" type="text" placeholder="Enter meta title"
+                     value={this.state.page.meta_title}
+                     onChange={e => this._setStatePage({meta_title: e.target.value})} />
             </div>
             <div className="form-group">
-              <textarea ref="metaDescription" className="form-control input-lg" rows="2" placeholder="Enter meta description"></textarea>
+              <textarea ref="metaDescription" className="form-control input-lg" rows="2" placeholder="Enter meta description"
+                        value={this.state.page.meta_description}
+                        onChange={e => this._setStatePage({meta_description: e.target.value})}></textarea>
             </div>
             <div className="form-group">
-              <input ref="metaKeywords" className="form-control input-lg" type="text" placeholder="Enter meta keywords" />
+              <input ref="metaKeywords" className="form-control input-lg" type="text" placeholder="Enter meta keywords"
+                     value={this.state.page.meta_keywords}
+                     onChange={e => this._setStatePage({meta_keywords: e.target.value})} />
             </div>
           </div>
           <div className="col-xs-8">
             <div className="form-group">
                 <input ref="pageTitle" className="form-control input-lg" type="text" placeholder="Headline"
+                  value={this.state.page.title}
                   onChange={this._onUpdatePageUri} />
             </div>
             <div className="form-group">
               <Editor
                 style={styles.editor}
                 className="form-control input-lg"
-                text={this.state.article}
+                text={this.state.page.article}
                 onChange={this._onArticleChange}
                 options={editorOptions} />
             </div>
             {this.renderSubmitButton()}
-            <input ref="pageId" type="hidden" name="pageId" value={this.state.pageId} />
+            <input ref="pageId" type="hidden" name="pageId" value={this.state.page.id} />
           </div>
         </div>
         <div className="row" style={styles.uploaderRow}>
@@ -187,6 +206,15 @@ export default class PageEditor extends React.Component {
         </div>
       </form>
     );
+  }
+
+  _loadPage(pageId) {
+    ApiRequest.get('/pages/'+pageId)
+      .send(res => {
+        let page = res.data;
+        this.setState({page});
+      });
+
   }
 
   _onPostDateChange(datetime) {
@@ -205,8 +233,8 @@ export default class PageEditor extends React.Component {
   _getPageData(publish = false) {
     return {
       title: this.refs.pageTitle.value,
-      article: this.state.article, // this.refs.pageArticle.value,
-      uri: this.state.uri || this.refs.pageUri.value,
+      article: this.state.page.article, // this.refs.pageArticle.value,
+      uri: this.state.page.uri || this.refs.pageUri.value,
       category: this.refs.pageCategory.value,
       preview_image: this.refs.previewImage.value,
       meta_title: this.refs.metaTitle.value,
@@ -225,7 +253,7 @@ export default class PageEditor extends React.Component {
     e.preventDefault();
     if (this.state.processing) return;
 
-    let endpoint = this.state.pageId ? '/pages/' + this.state.pageId : '/pages';
+    let endpoint = this.state.page.id ? '/pages/' + this.state.page.id : '/pages';
 
     this.setState({processing: true, publishing: publish});
     ApiRequest.post(endpoint)
@@ -236,7 +264,7 @@ export default class PageEditor extends React.Component {
         Utils.showSuccess(message);
         this.setState({
           processing: false,
-          pageId: page.id,
+          page: page,
         });
         // this._clearForm();
       });
@@ -248,8 +276,7 @@ export default class PageEditor extends React.Component {
     this.hasCustomUri = false;
     this.setState({
       processing: false,
-      article: "",
-      uri: "",
+      page: {},
     });
   }
 
@@ -269,18 +296,25 @@ export default class PageEditor extends React.Component {
   _onChangeUri(e) {
     this.hasCustomUri = true;
 
-    this.setState({uri: this.refs.pageUri.value});
+    this._setStatePage({uri: this.refs.pageUri.value});
     return true;
   }
 
   _onUpdatePageUri() {
     if (this.hasCustomUri) return;
 
-    this.setState({uri: this._getUriFromTitle()});
+    this._setStatePage({uri: this._getUriFromTitle()});
   }
 
   _onArticleChange(article, medium) {
-    this.setState({article});
+    this._setStatePage({article});
+  }
+
+  _setStatePage(newPage, state = {}) {
+    let page = this.state.page;
+    Object.assign(page, newPage);
+    Object.assign(state, {page});
+    this.setState(state);
   }
 
   _onUserChange(user) {
