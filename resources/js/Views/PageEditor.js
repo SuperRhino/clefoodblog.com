@@ -21,6 +21,7 @@ export default class PageEditor extends React.Component {
 
     this.postTimestamp = null;
     this.hasCustomUri = false;
+    this.autosaveId = null;
 
     this.state = {
       authorized: true,
@@ -30,12 +31,14 @@ export default class PageEditor extends React.Component {
       page: {},
     };
 
+    this._savePage = this._savePage.bind(this);
     this._onSubmitPage = this._onSubmitPage.bind(this);
     this._onPublish = this._onPublish.bind(this);
     this._onPostDateChange = this._onPostDateChange.bind(this);
     this._onUpdatePageUri = this._onUpdatePageUri.bind(this);
     this._onChangeUri = this._onChangeUri.bind(this);
     this._onBlurUri = this._onBlurUri.bind(this);
+    this._onChangeTitle = this._onChangeTitle.bind(this);
     this._onArticleChange = this._onArticleChange.bind(this);
     this._onUserChange = this._onUserChange.bind(this);
   }
@@ -190,7 +193,7 @@ export default class PageEditor extends React.Component {
             <div className="form-group">
                 <input ref="pageTitle" className="form-control input-lg" type="text" placeholder="Headline"
                   value={this.state.page.title}
-                  onChange={this._onUpdatePageUri} />
+                  onChange={this._onChangeTitle} />
             </div>
             <div className="form-group">
               <Editor
@@ -250,22 +253,43 @@ export default class PageEditor extends React.Component {
   }
 
   _onSubmitPage(e, publish = false) {
-    e.preventDefault();
+    if (!! e) e.preventDefault();
     if (this.state.processing) return;
 
-    let endpoint = this.state.page.id ? '/pages/' + this.state.page.id : '/pages';
+    this._savePage(publish, true);
+  }
 
-    this.setState({processing: true, publishing: publish});
+  _savePage(publish = false, explicitSave = false) {
+    explicitSave = (explicitSave === true);
+    if (explicitSave) {
+      this.setState({processing: true, publishing: publish});
+      if (!! this.autosaveId) {
+        clearInterval(this.autosaveId);
+      }
+    }
+
+    let endpoint = this.state.page.id ? '/pages/' + this.state.page.id : '/pages';
     ApiRequest.post(endpoint)
       .data(this._getPageData(publish))
       .send(res => {
-        let page = res.data,
-            message = publish ? 'Page published!' : 'Page saved!';
-        Utils.showSuccess(message);
+
+        if(! explicitSave) {
+          return;
+        }
+
+        let page = res.data;
+        Utils.showSuccess(publish ? 'Page published!' : 'Page saved!');
+
+        if (! this.state.page.id) {
+          let url = window.location.href + '?id=' +page.id;
+          history.pushState(null, document.querySelector("title").innerHTML, url);
+        }
+
         this.setState({
           processing: false,
           page: page,
         });
+
         // this._clearForm();
       });
   }
@@ -300,10 +324,21 @@ export default class PageEditor extends React.Component {
     return true;
   }
 
-  _onUpdatePageUri() {
+  _onChangeTitle(e) {
+    let page = {title: this.refs.pageTitle.value};
+    if (! this.hasCustomUri) {
+      page.uri = this._getUriFromTitle();
+    }
+
+    this._setStatePage(page);
+  }
+
+  _onUpdatePageUri(setTitle = false) {
     if (this.hasCustomUri) return;
 
-    this._setStatePage({uri: this._getUriFromTitle()});
+    this._setStatePage({
+      uri: this._getUriFromTitle(),
+    });
   }
 
   _onArticleChange(article, medium) {
@@ -311,6 +346,7 @@ export default class PageEditor extends React.Component {
   }
 
   _setStatePage(newPage, state = {}) {
+    this._startAutosave();
     let page = this.state.page;
     Object.assign(page, newPage);
     Object.assign(state, {page});
@@ -319,6 +355,12 @@ export default class PageEditor extends React.Component {
 
   _onUserChange(user) {
     this.setState({authorized: !! user.id});
+  }
+
+  _startAutosave() {
+    if (! this.autosaveId) {
+      this.autosaveId = setInterval(this._savePage, 5000);
+    }
   }
 }
 
@@ -341,12 +383,9 @@ var styles = {
   previewImage: {
     color: "rgb(50,50,50)",
     borderWidth: 0,
-    // borderColor: "rgba(150,150,150,.8)",
-    // borderStyle: "dashed",
     fontWeight: "bold",
     fontSize: 30,
     textAlign: "center",
-    // padding: "40px 0",
     minHeight: "auto",
     background: "transparent",
   },
