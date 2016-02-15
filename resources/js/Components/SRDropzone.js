@@ -30,7 +30,7 @@ export default class SRDropzone extends React.Component {
       .then(token => {
         let dzOptions = {
           url: ApiUtils.buildUrl('/upload-file?token='+token),
-          dictDefaultMessage: "Dragon Drop Images or Click to Upload",
+          dictDefaultMessage: "<h3>Dragon Drop Images</h3><p> or Click to Upload</p>",
           init: function() {
 
             this.on("success", (file, response) => {

@@ -114,6 +114,14 @@ export default class PageEditor extends React.Component {
     // .glyphicon-ok or .glyphicon-remove
     return (
       <form ref="addNewPage" className="" role="form" onSubmit={e => this._onSubmitPage(e)}>
+        <div className="jumbotron" style={styles.uploaderRow}>
+          <div className="container">
+            <SRDropzone
+              style={styles.previewImage}
+              activeStyle={styles.dragActive}
+              multiple={false} />
+          </div>
+        </div>
         <div className="row">
           <div className="col-xs-12">
             <h1>Page Editor</h1>
@@ -194,14 +202,6 @@ export default class PageEditor extends React.Component {
             </div>
             {this.renderSubmitButton()}
             <input ref="pageId" type="hidden" name="pageId" value={this.state.page.id} />
-          </div>
-        </div>
-        <div className="row" style={styles.uploaderRow}>
-          <div className="col-xs-12">
-            <SRDropzone
-              style={styles.previewImage}
-              activeStyle={styles.dragActive}
-              multiple={false} />
           </div>
         </div>
       </form>
@@ -332,14 +332,23 @@ var styles = {
     height: "auto",
     minHeight: "20em",
   },
+  uploaderRow: {
+    paddingLeft: "15px",
+    paddingRight: "15px",
+    paddingTop: "30px",
+    paddingBottom: "30px",
+  },
   previewImage: {
-    color: "rgb(150,150,150)",
-    borderWidth: 2,
-    borderColor: "rgba(150,150,150,.8)",
-    borderStyle: "dashed",
+    color: "rgb(50,50,50)",
+    borderWidth: 0,
+    // borderColor: "rgba(150,150,150,.8)",
+    // borderStyle: "dashed",
     fontWeight: "bold",
+    fontSize: 30,
     textAlign: "center",
-    padding: "40px 0",
+    // padding: "40px 0",
+    minHeight: "auto",
+    background: "transparent",
   },
   dragActive: {
     borderColor: 'rgb(120,120,120)',
@@ -348,8 +357,5 @@ var styles = {
     fontSize: "18px",
     padding: "10px 0",
     width: "100%",
-  },
-  uploaderRow: {
-    marginTop: "15px",
   },
 };
