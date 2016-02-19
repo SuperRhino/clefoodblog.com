@@ -107,7 +107,7 @@ export default class PageEditor extends React.Component {
     let editorOptions = {
       placeholder: {text: "Article body..."},
       toolbar: {
-        buttons: ['bold', 'italic', 'anchor', 'h2', 'h3', 'quote', 'unorderedlist', imageButton],
+        buttons: ['bold', 'italic', 'anchor', 'h2', 'h3', 'quote', 'unorderedlist', imageButton, 'removeFormat'],
       },
     };
 
