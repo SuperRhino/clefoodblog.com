@@ -6,32 +6,34 @@
     {% include "_includes/jumbotron.html" %}
 
     <div class="container">
+      {% for row in data.pages|batch(3) %}
         <div class="row">
-            {% for page in data.pages %}
-            <div class="col-md-4">
-              {% if page.preview_image %}
-              {% if page.uri %}
-              <a href="{{ page.uri }}">
-                <img src="{{ page.preview_image }}" alt="{{ page.meta_title }}" class="img-responsive" />
-              </a>
-              {% else %}
+          {% for page in row %}
+          <div class="col-md-4">
+            {% if page.preview_image %}
+            {% if page.uri %}
+            <a href="{{ page.uri }}">
               <img src="{{ page.preview_image }}" alt="{{ page.meta_title }}" class="img-responsive" />
-              {% endif %}
-              {% endif %}
+            </a>
+            {% else %}
+            <img src="{{ page.preview_image }}" alt="{{ page.meta_title }}" class="img-responsive" />
+            {% endif %}
+            {% endif %}
 
-              {% if page.uri %}
-              <h2><a href="{{ page.uri }}">{{ page.title }}</a></h2>
-              {% else %}
-              <h2>{{ page.title }}</h2>
-              {% endif %}
+            {% if page.uri %}
+            <h2><a href="{{ page.uri }}">{{ page.title }}</a></h2>
+            {% else %}
+            <h2>{{ page.title }}</h2>
+            {% endif %}
 
-              <p><em>{{ page.updated_date is empty ? page.post_date|date("M j, Y") : page.updated_date|date("M j, Y") }}</em></p>
-              <p>{{ page.meta_description }}</p>
-            </div>
-            {% endfor %}
+            <p><em>{{ page.updated_date is empty ? page.post_date|date("M j, Y") : page.updated_date|date("M j, Y") }}</em></p>
+            <p>{{ page.meta_description }}</p>
+          </div>
+          {% endfor %}
         </div>
+      {% endfor %}
 
-        {% include "_includes/footer.html" %}
+      {% include "_includes/footer.html" %}
     </div>
 
     {% include "_includes/scripts.html" %}

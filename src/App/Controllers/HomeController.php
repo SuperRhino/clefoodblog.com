@@ -33,4 +33,16 @@ class HomeController extends BaseController
 
         return $this->view('blog-page.html', ['page' => $page->toArray()]);
     }
+
+    public function showCategory($request)
+    {
+        $categoryName = $request->getAttribute('categoryName');
+        $data = [
+            'category' => $categoryName,
+            'pages' => Page::findActiveByCategory($categoryName),
+        ];
+
+        return $this->view('category.html', $data);
+
+    }
 }

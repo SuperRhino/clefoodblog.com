@@ -23,6 +23,9 @@
                 <!-- Author -->
                 <p class="lead">
                     by <a href="#">{{ data.page.author_id == 1 ? "Ryan" : "Shayna" }} </a>
+                    {% if data.page.category %}
+                    in <a href="/category/{{ data.page.category|url_encode }}">{{ data.page.category }}</a>
+                    {% endif %}
                 </p>
 
                 <hr>

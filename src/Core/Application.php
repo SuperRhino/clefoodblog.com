@@ -224,7 +224,8 @@ class Application extends App {
 
         $container = $this->getContainer();
         $container['errorHandler'] = function ($c) {
-            return function ($request, $response, \Exception $exception) use ($c) {
+            return function ($request, $response, \Exception $e) use ($c) {
+                var_dump($e); die;
                 if ($e instanceof HttpException) {
                     if ($e->getStatusCode() === 404) {
                         // @SLIM3

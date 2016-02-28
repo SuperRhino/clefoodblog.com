@@ -8,6 +8,8 @@ import ApiRequest from '../Api/ApiRequest';
 import CurrentUser from '../Stores/CurrentUser';
 import SRDropzone from '../Components/SRDropzone';
 
+const categories = ["Reviews", "Recipes", "How To's", "Friday Food Fight", "Where To Find...", "Interviews"];
+
 export default class PageEditor extends React.Component {
   static propTypes = {
     pageId: React.PropTypes.number,
@@ -112,8 +114,6 @@ export default class PageEditor extends React.Component {
       },
     };
 
-    let categories = ["Reviews", "Recipes", "How To's", "Friday Food Fight", "Where To Find..."];
-
     // add .has-success or .has-error
     // .glyphicon-ok or .glyphicon-remove
     return (
@@ -165,7 +165,7 @@ export default class PageEditor extends React.Component {
                 onChange={e => this._setStatePage({category: e.target.value})}>
                 <option value="">— Choose Category —</option>
                 {categories.map((category, index) => {
-                  return (<option key={'category-'+category}>{category}</option>);
+                  return (<option key={'category-'+category} value={category}>{category}</option>);
                 })}
               </select>
             </div>

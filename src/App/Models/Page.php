@@ -185,8 +185,7 @@ class Page extends Model {
         $query->cols(['*'])
               ->from('pages')
               ->where('status=1')
-              ->where('uri="'.$pageName.'"')
-              ->limit($limit);
+              ->where('uri="'.$pageName.'"');
 
         $result = static::$app->db->fetchOne($query);
         if (! $result) {
@@ -222,6 +221,25 @@ class Page extends Model {
         $res = static::$app->db->fetchAll($query);
         foreach ($res as $page) {
             $pages []= (new Page($page))->toArray();
+        }
+
+        return $pages;
+    }
+
+    public static function findActiveByCategory($category)
+    {
+        $query = static::$app->query->newSelect();
+        $query->cols(['*'])
+              ->from('pages')
+              ->where('status=1')
+              ->where('category LIKE "'. $category .'"')
+              ->orderBy(['post_date desc'])
+              ->limit(100);
+
+        $pages = [];
+        $res = static::$app->db->fetchAll($query);
+        foreach ($res as $page) {
+            $pages []= new Page($page);
         }
 
         return $pages;

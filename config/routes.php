@@ -23,6 +23,11 @@ $must_auth = function($request, $response, $next)
  */
 $this->get('/', 'App\Controllers\HomeController:index');
 $this->get('/{pageName}', 'App\Controllers\HomeController:showPage');
+$this->get('/category/{categoryName}', 'App\Controllers\HomeController:showCategory');
+
+/**
+ * Admin Pages Routes:
+ */
 $this->get('/admin/page-editor', 'App\Controllers\AdminController:pageEditor');
 $this->get('/admin/page-inventory', 'App\Controllers\AdminController:pageInventory');
 
