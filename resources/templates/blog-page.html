@@ -5,24 +5,75 @@
     {% include "_includes/navbar.html" %}
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div class="container">
-            <h1>{{ data.page.title }}</h1>
-        </div>
-    </div>
+    <div class="jumbotron"></div>
 
+    <!-- Page Content -->
     <div class="container">
+
         <div class="row">
-          <div class="col-xs-8 col-xs-offset-2">
-            <p><em>{{ page.updated_date is empty ? page.post_date|date("M j, Y") : page.updated_date|date("M j, Y") }}</em></p>
-            {{ data.page.article|raw }}
-          </div>
+
+            <!-- Blog Post Content Column -->
+            <div class="col-lg-8">
+
+                <!-- Blog Post -->
+
+                <!-- Title -->
+                <h1>{{ data.page.title }}</h1>
+
+                <!-- Author -->
+                <p class="lead">
+                    by <a href="#">{{ data.page.user_id == 1 ? "Ryan" : "Shayna" }} </a>
+                </p>
+
+                <hr>
+
+                <!-- Date/Time -->
+                <p><span class="glyphicon glyphicon-time"></span> {{ data.page.updated_date is empty ? data.page.post_date|date("M j, Y") : data.page.updated_date|date("M j, Y") }}</p>
+
+                <hr>
+
+                <!-- Post Content -->
+                {{ data.page.article|raw }}
+
+                <hr>
+
+                <!-- Blog Comments -->
+                <div class="fb-comments" data-href="http://clefoodblog.com/{{ data.page.uri }}" data-numposts="10" width="100%"></div>
+
+                <!-- Comments Form -->
+                {# {% include "_blog/comments-form.html" %} #}
+
+                <hr>
+
+                <!-- Posted Comments -->
+                {# {% include "_blog/comments.html" %} #}
+
+            </div>
+
+            <!-- Blog Sidebar Widgets Column -->
+            <div class="col-md-4">
+
+                <!-- Blog Search Well -->
+                {% include "_blog/search.html" %}
+
+                <!-- Blog Categories Well -->
+                {% include "_blog/categories.html" %}
+
+                <!-- Side Widget Well -->
+                {# {% include "_blog/side-well.html" %} #}
+
+            </div>
 
         </div>
+        <!-- /.row -->
+
+        <hr>
 
         {% include "_includes/footer.html" %}
     </div>
+    <!-- /.container -->
 
     {% include "_includes/scripts.html" %}
+    {% include "_includes/fb-sdk.html" %}
 </body>
 </html>
