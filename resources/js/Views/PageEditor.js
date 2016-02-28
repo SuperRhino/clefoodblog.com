@@ -21,6 +21,7 @@ export default class PageEditor extends React.Component {
 
     this.postTimestamp = null;
     this.hasCustomUri = false;
+    this.isLocationSet = false;
     this.autosaveId = null;
 
     this.state = {
@@ -56,6 +57,7 @@ export default class PageEditor extends React.Component {
   componentDidMount() {
     if (this.props.pageId) {
       this._loadPage(this.props.pageId);
+      this._setWindowLocation(page.id);
     }
   }
 
@@ -220,6 +222,14 @@ export default class PageEditor extends React.Component {
 
   }
 
+  _setWindowLocation(pageId) {
+    if (this.isLocationSet) return;
+
+    let url = window.location.href + '?id=' +pageId;
+    history.pushState(null, document.querySelector("title").innerHTML, url);
+    this.isLocationSet = true;
+  }
+
   _onPostDateChange(datetime) {
     this.postTimestamp = datetime;
     this._onUpdatePageUri();
@@ -272,25 +282,19 @@ export default class PageEditor extends React.Component {
     ApiRequest.post(endpoint)
       .data(this._getPageData(publish))
       .send(res => {
+        let page = res.data;
 
         if(! explicitSave) {
+          this.state.page.id = page.id;
           return;
         }
 
-        let page = res.data;
         Utils.showSuccess(publish ? 'Page published!' : 'Page saved!');
-
-        if (! this.state.page.id) {
-          let url = window.location.href + '?id=' +page.id;
-          history.pushState(null, document.querySelector("title").innerHTML, url);
-        }
-
+        this._setWindowLocation(page.id);
         this.setState({
           processing: false,
           page: page,
         });
-
-        // this._clearForm();
       });
   }
 
