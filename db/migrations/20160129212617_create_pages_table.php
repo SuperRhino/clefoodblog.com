@@ -39,12 +39,14 @@ class CreatePagesTable extends AbstractMigration
              ->addColumn('author_id', 'integer', ['null' => false])
              ->addColumn('post_date', 'datetime', ['null' => false])
              ->addColumn('updated_date', 'datetime', ['null' => true])
+             ->addColumn('status', 'integer', ['null' => false, 'limit' => 1, 'default' => 0])
              ->addIndex('title')
              ->addIndex('uri')
              ->addIndex('category')
              ->addIndex('author_id')
              ->addIndex('post_date')
              ->addIndex('updated_date')
+             ->addIndex('status')
              ->create();
     }
 }
