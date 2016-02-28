@@ -21,7 +21,7 @@ export default class PageEditor extends React.Component {
 
     this.postTimestamp = null;
     this.hasCustomUri = false;
-    this.isLocationSet = false;
+    this.isLocationSet = !! Utils.getQueryParam('id');
     this.autosaveId = null;
 
     this.state = {
@@ -57,7 +57,6 @@ export default class PageEditor extends React.Component {
   componentDidMount() {
     if (this.props.pageId) {
       this._loadPage(this.props.pageId);
-      this._setWindowLocation(page.id);
     }
   }
 
@@ -217,6 +216,7 @@ export default class PageEditor extends React.Component {
     ApiRequest.get('/pages/'+pageId)
       .send(res => {
         let page = res.data;
+        this._setWindowLocation(page.id);
         this.setState({page});
       });
 
