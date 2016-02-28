@@ -3,6 +3,7 @@
 phinx.yml
 .env
 .htaccess
+.imdone
 
 vendor/
 node_modules/
