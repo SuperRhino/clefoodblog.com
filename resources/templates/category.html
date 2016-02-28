@@ -35,7 +35,7 @@
             <div class="col-md-4 portfolio-item">
               {% if page.preview_image %}
               {% if page.uri %}
-              <a href="{{ page.uri }}">
+              <a href="/{{ page.uri }}">
                 <img src="{{ page.preview_image }}" alt="{{ page.meta_title }}" class="img-responsive" />
               </a>
               {% else %}
@@ -44,7 +44,7 @@
               {% endif %}
 
               {% if page.uri %}
-              <h3><a href="{{ page.uri }}">{{ page.title }}</a></h3>
+              <h3><a href="/{{ page.uri }}">{{ page.title }}</a></h3>
               {% else %}
               <h3>{{ page.title }}</h3>
               {% endif %}
