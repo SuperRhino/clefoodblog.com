@@ -1,9 +1,23 @@
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+@font-face {
+  font-family: 'Webly Sleek UIS';
+  src: url('/fonts/WeblySleek_UI_Semibold/weblysleekuisb.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */ url('/fonts/WeblySleek_UI_Semibold/weblysleekuisb.ttf') format('truetype');
+  /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+@font-face {
+  font-family: 'Webly Sleek';
+  src: url('/fonts/weblysleek_ui/weblysleekuil.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */ url('/fonts/weblysleek_ui/weblysleekuil.ttf') format('truetype');
+  /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
 body {
   padding-top: 50px;
   padding-bottom: 20px;
+  font-family: 'Webly Sleek';
+}
+.font-heavy {
+  font-family: 'Webly Sleek UIS';
 }
 .jumbotron {
   background-image: url(https://d27v8envyltg3v.cloudfront.net/bg/7939217/14221474025939/bg_blur.jpg);
