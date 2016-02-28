@@ -161,7 +161,7 @@ class Page extends Model {
         $query->cols(['*'])
               ->from('pages')
               ->where('status=1')
-              ->orderBy(['updated_date desc'])
+              ->orderBy(['post_date desc'])
               ->limit($limit);
 
         $pages = [];
