@@ -20,6 +20,12 @@
     <meta property="og:article:published_time" content="{{ meta.article_date }}">
 {% endif %}
 
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@clefoodblog">
+    <meta name="twitter:title" content="{{ meta.title }}">
+    <meta name="twitter:description" content="{{ meta.description }}">
+    <meta name="twitter:image" content="{{ meta.image }}">
+
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
     <link rel="stylesheet" href="{{ env.css_build_path }}/{{ env.assets['common.css'] }}">
