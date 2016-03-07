@@ -35,9 +35,13 @@ class BaseController {
         $this->app = $container['app'];
 
         $this->metadata = [
+            'url' => $this->app->getSetting('app.urls.site'),
             'title' => $this->app->getSetting('app.name'),
             'description' => $this->app->getSetting('app.description'),
             'keywords' => $this->app->getSetting('app.keywords'),
+            'image' => $this->app->getSetting('app.urls.site') . 'apple-touch-icon.png',
+            'site_name' => $this->app->getSetting('app.name'),
+            'og_type' => 'website',
         ];
     }
 

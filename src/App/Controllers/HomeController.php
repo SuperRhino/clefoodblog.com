@@ -25,10 +25,19 @@ class HomeController extends BaseController
             // $this->notFound();
         }
 
+        $meta_image = $page->preview_image;
+        if (stripos($meta_image, 'http') !== 0) {
+            $meta_image = $this->app->getSetting('app.urls.site') . $meta_image;
+        }
         $this->setMetadata([
+            'url' => $this->app->getSetting('app.urls.site') . $page->uri,
             'title' => $page->meta_title,
             'description' => $page->meta_description,
             'keywords' => $page->meta_keywords,
+            'image' => $meta_image,
+            'og_type' => 'article',
+            'article_section' => $page->category,
+            'article_date' => date('Y-m-d', strtotime($page->post_date)),
         ]);
 
         return $this->view('blog-page.html', ['page' => $page->toArray()]);
@@ -41,6 +50,14 @@ class HomeController extends BaseController
             'category' => $categoryName,
             'pages' => Page::findActiveByCategory($categoryName),
         ];
+
+        $this->setMetadata([
+            'url' => $this->app->getSetting('app.urls.site') . 'category/'.$categoryName,
+            'title' => $categoryName.' Archives',
+            'description' => 'Article archives for Cleveland Food Blog '.$categoryName.' category.',
+            'keywords' => $page->meta_keywords.','.$categoryName,
+            'og_type' => 'object',
+        ]);
 
         return $this->view('category.html', $data);
 

@@ -3,9 +3,11 @@
 (new Dotenv\Dotenv('../'))->load();
 
 $env = strtolower(getenv('ENV'));
+$site_url = 'http://clefoodblog.com/';
 $assets = json_decode(file_get_contents('../asset-manifest.json'), true);
 switch ($env) {
     case 'dev':
+        $site_url = 'http://dev.clefoodblog.com/';
         $assets = array_combine(array_keys($assets), array_keys($assets));
         break;
 }
@@ -19,6 +21,7 @@ $container = new Slim\Container([
         'app.description' => 'A journey thru the Cleveland food scene from a couple of people who really love cardamom bombs',
         'app.keywords'    => 'cleveland,food,blog,restaurant',
 
+        'app.urls.site'   => $site_url,
         'app.urls.assets' => '/build',
         'app.paths.js'    => '/build/js',
         'app.paths.css'   => '/build/css',
