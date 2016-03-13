@@ -22,7 +22,6 @@ class HomeController extends BaseController
         $page = Page::findByPageName($pageName);
         if (! $page) {
             throw new NotFoundException('Page not found');
-            // $this->notFound();
         }
 
         $meta_image = $page->preview_image;
