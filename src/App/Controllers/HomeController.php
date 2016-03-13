@@ -60,6 +60,25 @@ class HomeController extends BaseController
         ]);
 
         return $this->view('category.html', $data);
+    }
 
+    public function searchResults($request)
+    {
+        $params = $request->getQueryParams();
+        $term = array_get($params, 'term');
+        $data = [
+            'searchTerm' => $term,
+            'pages' => Page::findBySearchTerm($term),
+        ];
+
+        $this->setMetadata([
+            'url' => $this->app->getSetting('app.urls.site') . 'search?term='.$term,
+            'title' => $term.' Search Results',
+            'description' => 'Search results for '.$term.' on Cleveland Food Blog.',
+            'keywords' => $this->app->getSetting('app.keywords').','.$term,
+            'og_type' => 'object',
+        ]);
+
+        return $this->view('search.html', $data);
     }
 }
