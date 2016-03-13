@@ -37,11 +37,18 @@ export default class PageInventory extends React.Component {
   }
 
   renderRow(page, index) {
+    let editUrl = "/admin/page-editor?id="+page.id,
+        viewUrl = "/"+page.uri,
+        viewBtn = ! page.status ? null : (
+          <a href={viewUrl} className="btn btn-success" onClick={this._stopProp.bind(this)}>View Published</a>
+        );
     return (
-      <tr key={'page-'+index}>
-        <td><a href={"/admin/page-editor?id="+page.id}>{page.id}</a></td>
-        <td><a href={"/admin/page-editor?id="+page.id}>{page.title}</a></td>
-        <td>{page.status  ? 'Published' : ''}</td>
+      <tr key={'page-'+index} style={styles.row} onClick={this._goToEdit.bind(this, editUrl)}>
+        <td>
+          <a href={editUrl} className="btn btn-default" onClick={this._stopProp.bind(this)}>Edit</a>
+        </td>
+        <td><a href={editUrl}>{page.title} ({page.id})</a></td>
+        <td>{viewBtn}</td>
       </tr>
     );
   }
@@ -58,7 +65,7 @@ export default class PageInventory extends React.Component {
       <table className="table table-striped table-hover">
         <tbody>
           <tr>
-            <th>ID</th>
+            <th>&nbsp;</th>
             <th>Title</th>
             <th>Status</th>
           </tr>
@@ -81,9 +88,20 @@ export default class PageInventory extends React.Component {
   _onUserChange(user) {
     this.setState({authorized: !! user.id});
   }
+
+  _stopProp(e) {
+    e.stopPropagation();
+  }
+
+  _goToEdit(editUrl, e) {
+    window.location = editUrl;
+  }
 }
 
 
 var styles = {
   container: {},
+  row: {
+    cursor: "pointer",
+  },
 };
