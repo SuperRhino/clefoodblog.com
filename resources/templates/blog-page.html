@@ -30,8 +30,18 @@
 
                 <hr>
 
-                <!-- Date/Time -->
-                <p><span class="glyphicon glyphicon-time"></span> {{ data.page.updated_date is empty ? data.page.post_date|date("M j, Y") : data.page.updated_date|date("M j, Y") }}</p>
+                <p>
+                  <!-- Date/Time -->
+                  <span class="glyphicon glyphicon-calendar"></span> {{ data.page.updated_date is empty ? data.page.post_date|date("M j, Y") : data.page.updated_date|date("M j, Y") }}
+
+                  {% if data.page.reading_time >= 5 %}
+                  <!-- Reading Time -->
+                  <div class="pull-right">
+                    <span class="glyphicon glyphicon-time"></span>&nbsp;
+                    <em>about {{ data.page.reading_time }} mins read</em>
+                  </div>
+                  {% endif %}
+                </p>
 
                 <hr>
 

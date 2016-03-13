@@ -19,6 +19,8 @@ class Page extends Model {
     var $updated_date;
     var $status;
 
+    var $readingTime = null;
+
     function __construct($values = [])
     {
         $this->id = (int) array_get($values, 'id');
@@ -153,6 +155,8 @@ class Page extends Model {
             'updated_date' => $this->updated_date,
             'author_id' => $this->author_id,
             'status' => $this->status,
+            // Appends:
+            'reading_time' => $this->getReadingTime(),
         ];
     }
 
@@ -243,5 +247,21 @@ class Page extends Model {
         }
 
         return $pages;
+    }
+
+    public function getReadingTime()
+    {
+        if (! is_null($this->readingTime)) {
+            return $this->readingTime;
+        }
+
+        $avgAdultWPM = 275;
+        $wordCount   = str_word_count(strip_tags($this->article));
+        // Add 12 seconds for each image:
+        $numImages   = substr_count($this->article, '<img');
+        $numSeconds  = ($wordCount / $avgAdultWPM) + ($numImages * 12);
+        $this->readingTime = round(($numSeconds / 60));
+
+        return $this->readingTime;
     }
 }
