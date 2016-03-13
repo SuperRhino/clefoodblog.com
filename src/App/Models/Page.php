@@ -257,9 +257,10 @@ class Page extends Model {
 
         $avgAdultWPM = 275;
         $wordCount   = str_word_count(strip_tags($this->article));
+        $numMins     = ($wordCount / $avgAdultWPM);
         // Add 12 seconds for each image:
         $numImages   = substr_count($this->article, '<img');
-        $numSeconds  = ($wordCount / $avgAdultWPM) + ($numImages * 12);
+        $numSeconds  = ($numMins*60) + ($numImages * 12);
         $this->readingTime = round(($numSeconds / 60));
 
         return $this->readingTime;
