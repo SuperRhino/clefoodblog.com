@@ -48,15 +48,15 @@
                 <!-- Post Content -->
                 {{ data.page.article|raw }}
 
-                <hr>
+                <!-- FB Like Button -->
+                <div class="fb-like" data-href="http://clefoodblog.com/{{ data.page.uri }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+
 
                 <!-- Blog Comments -->
                 <div class="fb-comments" data-href="http://clefoodblog.com/{{ data.page.uri }}" data-numposts="10" width="100%"></div>
 
                 <!-- Comments Form -->
                 {# {% include "_blog/comments-form.html" %} #}
-
-                <hr>
 
                 <!-- Posted Comments -->
                 {# {% include "_blog/comments.html" %} #}
@@ -84,8 +84,6 @@
 
         </div>
         <!-- /.row -->
-
-        <hr>
 
         {% include "_includes/footer.html" %}
     </div>
