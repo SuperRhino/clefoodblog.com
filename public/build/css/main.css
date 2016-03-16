@@ -58,6 +58,6 @@ body {
 .jumbotron .dz-message {
   margin: 0;
 }
-.btn-subscribe {
-  margin-bottom: 10px;
+#btn-subscribe {
+  margin-bottom: 20px;
 }
