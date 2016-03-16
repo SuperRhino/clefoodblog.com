@@ -16,13 +16,11 @@ export default class Initialize {
   }
 
   static onReady() {
-    let ga = window.ga;
-
     // Click on big button:
     let baButton = document.getElementById('btnComingSoon');
     if (baButton) {
       baButton.onclick = function(){
-        if (ga) ga('send', 'event', 'buttons', 'click', 'stay tuned');
+        if (window.ga) ga('send', 'event', 'buttons', 'click', 'stay tuned');
         console.log('send', 'event', 'buttons', 'click', 'stay tuned');
         return false;
       };
@@ -32,7 +30,7 @@ export default class Initialize {
     let btnSubscribe = document.getElementById('btn-subscribe');
     if (btnSubscribe) {
       btnSubscribe.onclick = function(){
-        if (ga) ga('send', 'event', 'buttons', 'click', 'subscribe');
+        if (window.ga) ga('send', 'event', 'buttons', 'click', 'subscribe');
       };
     }
 

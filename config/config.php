@@ -12,7 +12,7 @@ switch ($env) {
         break;
 }
 
-$isProd = ($env === 'prod');
+$isProd = true; //($env === 'prod');
 $container = new Slim\Container([
     'settings' => [
         'env' => $env,
