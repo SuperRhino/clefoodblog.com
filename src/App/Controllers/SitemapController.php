@@ -20,21 +20,25 @@ class SitemapController extends BaseController
         $categories = Category::findAllActive();
 
         // Add all page routes:
-        $lastmod = ! empty($pages[0]) ? date($pages[0]->lastmod, 'Y-m-d') : date(strtotime('-1 week'), 'Y-m-d');
+        $lastmod = empty($pages[0]) ? '-1 week' : (
+                        ! empty($pages[0]->updated_date) ? $pages[0]->updated_date : $pages[0]->post_date
+                    );
+        $lastmod = date('Y-m-d', strtotime($lastmod));
         $baseUrl = $this->app->getSetting('app.urls.site');
         $sitemap->add($baseUrl, $lastmod, ChangeFrequency::WEEKLY, 1.0);
 
         // Append all blog pages:
         foreach($pages as $page) {
             $url = $baseUrl . $page->uri;
-            $lastmod = date($page->updated_date, 'Y-m-d');
+            $lastmod = ! empty($page->updated_date) ? $page->updated_date : $page->post_date;
+            $lastmod = date('Y-m-d', strtotime($lastmod));
             $sitemap->add($url, $lastmod, ChangeFrequency::WEEKLY, 0.5);
         }
 
         // Append all category pages:
         foreach($categories as $cat) {
             $url = $baseUrl . 'category/' . $cat['category'];
-            $lastmod = date($cat['lastmod'], 'Y-m-d');
+            $lastmod = date('Y-m-d', strtotime($cat['lastmod']));
             $sitemap->add($url, $lastmod, ChangeFrequency::WEEKLY, 0.3);
         }
 
