@@ -61,6 +61,19 @@ class BaseController {
     }
 
     /**
+     * Send XML Response i.e. sitemap
+     * @param  string $body
+     */
+    protected function sendXml($body)
+    {
+        $response = $this->container->response->withHeader('Content-type', 'text/xml');
+        $bodyStream = $response->getBody();
+        $bodyStream->write($body);
+        return $response->withBody($bodyStream);
+    }
+
+
+    /**
      * @param $metadata
      */
     protected function setMetadata($metadata)

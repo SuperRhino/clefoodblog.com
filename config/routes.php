@@ -24,6 +24,7 @@ $must_auth = function($request, $response, $next)
 $this->get('/', 'App\Controllers\HomeController:index');
 $this->get('/category/{categoryName}', 'App\Controllers\HomeController:showCategory');
 $this->get('/search', 'App\Controllers\HomeController:searchResults');
+$this->get('/sitemap', 'App\Controllers\SitemapController:index');
 $this->get('/{pageName}', 'App\Controllers\HomeController:showPage');
 
 /**

@@ -230,6 +230,23 @@ class Page extends Model {
         return $pages;
     }
 
+    public static function findAllActive()
+    {
+        $query = static::$app->query->newSelect();
+        $query->cols(['*'])
+              ->from('pages')
+              ->where('status=1')
+              ->orderBy(['if(updated_date, updated_date, post_date) desc']);
+
+        $pages = [];
+        $res = static::$app->db->fetchAll($query);
+        foreach ($res as $page) {
+            $pages []= new Page($page);
+        }
+
+        return $pages;
+    }
+
     public static function findActiveByCategory($category)
     {
         $query = static::$app->query->newSelect();
