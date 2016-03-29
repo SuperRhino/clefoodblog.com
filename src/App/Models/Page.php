@@ -94,7 +94,7 @@ class Page extends Model {
                    'title' => $this->title,
                    'uri' => $this->uri,
                    'article' => $article,
-                   'preview_image' => $this->preview_image,
+                   'preview_image' => $this->cleanPagePreview(),
                    'category' => $this->category,
                    'meta_title' => $this->meta_title,
                    'meta_description' => $this->meta_description,
@@ -121,7 +121,7 @@ class Page extends Model {
                    'title' => $this->title,
                    'uri' => $this->uri,
                    'article' => $this->article,
-                   'preview_image' => $this->preview_image,
+                   'preview_image' => $this->cleanPagePreview(),
                    'category' => $this->category,
                    'meta_title' => $this->meta_title,
                    'meta_description' => $this->meta_description,
@@ -137,6 +137,11 @@ class Page extends Model {
         $sth->execute($update->getBindValues());
 
         return $this->id;
+    }
+
+    public function cleanPagePreview()
+    {
+        return str_replace(' ', '%20', $this->preview_image);
     }
 
     public function toArray()
