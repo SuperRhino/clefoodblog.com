@@ -44,4 +44,18 @@ class SitemapController extends BaseController
 
         return $this->sendXml($sitemap->toString());
     }
+
+    public function rss()
+    {
+        $pages = Page::findAllActive(true);
+
+        $lastmod = empty($pages[0]) ? '-1 week' : (
+                        ! empty($pages[0]['updated_date']) ? $pages[0]['updated_date'] : $pages[0]['post_date']
+                    );
+
+        return $this->viewXml('xml/rss.xml', [
+            'lastmod' => date('r', strtotime($lastmod)),
+            'pages' => $pages,
+        ]);
+    }
 }

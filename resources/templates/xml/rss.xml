@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>{{ meta.title }}</title>
+    <link>{{ meta.url }}</link>
+    <description>{{ meta.description }}</description>
+    <language>en-US</language>
+    <copyright>Copyright {{ "now"|date("Y") }}, {{ meta.title }}</copyright>
+    <ttl>1440</ttl>
+    <lastBuildDate>{{ data.lastmod }}</lastBuildDate>
+{% for page in data.pages %}
+    <item>
+      <title>{{ page.meta_title }}</title>
+      <link>{{ meta.url }}{{ page.uri }}</link>
+      <description>{{ page.meta_description }}</description>
+      <pubDate>{{ page.post_date|date("r") }}</pubDate>
+    </item>
+{% endfor %}
+  </channel>
+</rss>

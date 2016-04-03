@@ -72,6 +72,16 @@ class BaseController {
         return $response->withBody($bodyStream);
     }
 
+    protected function viewXml($template, $data = [])
+    {
+        try {
+            $response = $this->container->response->withHeader('Content-type', 'text/xml');
+            return $this->container->view->render($response, $template, $this->getTemplateData($data));
+        } catch (\Twig_Error $e) {
+            $this->app->notFound();
+        }
+    }
+
 
     /**
      * @param $metadata

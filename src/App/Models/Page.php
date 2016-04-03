@@ -219,37 +219,29 @@ class Page extends Model {
         return new Page($result);
     }
 
-    public static function findAll()
+    public static function findAll($activeOnly = false, $toArray = true)
     {
         $query = static::$app->query->newSelect();
-        $query->cols(['*'])
-              ->from('pages')
-              ->orderBy(['if(updated_date, updated_date, post_date) desc']);
+        $query->cols(['*'])->from('pages');
+
+        if ($activeOnly) {
+            $query->where('status=1');
+        }
+
+        $query->orderBy(['if(updated_date, updated_date, post_date) desc']);
 
         $pages = [];
         $res = static::$app->db->fetchAll($query);
         foreach ($res as $page) {
-            $pages []= (new Page($page))->toArray();
+            $pages []= $toArray ? (new Page($page))->toArray() : new Page($page);
         }
 
         return $pages;
     }
 
-    public static function findAllActive()
+    public static function findAllActive($toArray = false)
     {
-        $query = static::$app->query->newSelect();
-        $query->cols(['*'])
-              ->from('pages')
-              ->where('status=1')
-              ->orderBy(['if(updated_date, updated_date, post_date) desc']);
-
-        $pages = [];
-        $res = static::$app->db->fetchAll($query);
-        foreach ($res as $page) {
-            $pages []= new Page($page);
-        }
-
-        return $pages;
+        return static::findAll(true, $toArray);
     }
 
     public static function findActiveByCategory($category)
