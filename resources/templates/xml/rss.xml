@@ -14,6 +14,9 @@
       <link>{{ meta.url }}{{ page.uri }}</link>
       <description>{{ page.meta_description }}</description>
       <pubDate>{{ page.post_date|date("r") }}</pubDate>
+{% if page.category %}
+      <category>{{ page.category }}</category>
+{% endif %}
     </item>
 {% endfor %}
   </channel>
