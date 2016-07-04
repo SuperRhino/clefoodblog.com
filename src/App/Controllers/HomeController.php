@@ -42,6 +42,24 @@ class HomeController extends BaseController
         return $this->view('blog-page.html', ['page' => $page->toArray()]);
     }
 
+    public function viewAll($request)
+    {
+        $data = [
+            'searchTerm' => '',
+            'pages' => Page::findAll(true),
+        ];
+
+        $this->setMetadata([
+            'url' => $this->app->getSetting('app.urls.site') . 'view-all',
+            'title' => $term.' All Results',
+            'description' => 'All results for '.$term.' on Cleveland Food Blog.',
+            'keywords' => $this->app->getSetting('app.keywords').','.$term,
+            'og_type' => 'object',
+        ]);
+
+        return $this->view('search.html', $data);
+    }
+
     public function showCategory($request)
     {
         $categoryName = $request->getAttribute('categoryName');
