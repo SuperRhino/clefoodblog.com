@@ -7,7 +7,7 @@
     <description>{{ meta.description }}</description>
     <image>
       <url>{{ meta.url }}images/LOGO.png</url>
-      <title>{{ meta.title }} RSS</title>
+      <title>{{ meta.title }}</title>
       <link>{{ meta.url }}</link>
     </image>
     <language>en-US</language>
