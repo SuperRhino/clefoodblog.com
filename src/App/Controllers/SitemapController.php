@@ -49,9 +49,20 @@ class SitemapController extends BaseController
     {
         $pages = Page::findAllActive(true);
 
+        // Lastmod for entire feed based on most recent page:
         $lastmod = empty($pages[0]) ? '-1 week' : (
                         ! empty($pages[0]['updated_date']) ? $pages[0]['updated_date'] : $pages[0]['post_date']
                     );
+
+        $upload_path = $this->app->getSetting('base_path').$this->app->getSetting('app.paths.upload_path');
+        $upload_base_url = rtrim($this->app->getSetting('app.urls.site'), '/') . $this->app->getSetting('app.paths.upload_dir');
+        foreach ($pages as &$page) {
+            $filepath = ! empty($page['preview_image'])
+                        ? str_replace($upload_base_url, $upload_path, $page['preview_image'])
+                        : null;
+            $page['preview_image_size'] = $filepath ? filesize($filepath) : null;
+            $page['preview_image_type'] = $filepath ? image_type_to_mime_type(exif_imagetype($filepath)) : null;
+        }
 
         return $this->viewXml('xml/rss.xml', [
             'lastmod' => date('r', strtotime($lastmod)),
