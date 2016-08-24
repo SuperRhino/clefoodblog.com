@@ -58,7 +58,7 @@ class SitemapController extends BaseController
         $upload_base_url = rtrim($this->app->getSetting('app.urls.site'), '/') . $this->app->getSetting('app.paths.upload_dir');
         foreach ($pages as &$page) {
             $filepath = ! empty($page['preview_image'])
-                        ? str_replace($upload_base_url, $upload_path, $page['preview_image'])
+                        ? urldecode(str_replace($upload_base_url, $upload_path, $page['preview_image']))
                         : null;
             $page['preview_image_size'] = $filepath ? filesize($filepath) : null;
             $page['preview_image_type'] = $filepath ? image_type_to_mime_type(exif_imagetype($filepath)) : null;
